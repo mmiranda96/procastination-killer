@@ -1,5 +1,6 @@
 package com.mmiranda96.procastinationKiller;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,6 +21,9 @@ public class LoginActivity extends AppCompatActivity {
 
     public void login(View v) {
         String username = this.username.getText().toString();
-        Toast.makeText(getApplicationContext(), "Hello "+username, Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.putExtra("Username", username);
+        startActivity(intent);
     }
 }
