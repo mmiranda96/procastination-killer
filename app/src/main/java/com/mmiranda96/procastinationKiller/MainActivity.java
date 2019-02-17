@@ -5,9 +5,13 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mmiranda96.procastinationKiller.adapters.TaskListAdapter;
 import com.mmiranda96.procastinationKiller.models.Task;
 
 import java.util.ArrayList;
@@ -17,7 +21,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int ADD_TASK_ACTIVITY_CODE = 0;
 
     private DBHelper db;
-    private TextView taskList;
+    private ListView taskList;
+    private TaskListAdapter adapter;
+    private ArrayList<Task> tasks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,8 +31,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         this.db = new DBHelper(getApplicationContext());
-        this.taskList= findViewById(R.id.textViewMainTaskList);
-        refreshTaskList();
+        this.taskList = findViewById(R.id.listViewMainActivityTaskList);
+        this.tasks = this.db.getTasks();
+
+        this.adapter = new TaskListAdapter(this, this.tasks);
+        this.taskList.setAdapter(adapter);
 
         Intent intent = getIntent();
         String username = intent.getStringExtra("Username");
@@ -34,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void refreshTaskList() {
-        ArrayList<Task> tasks = this.db.getTasks();
-        this.taskList.setText(tasks.toString());
+        this.tasks = this.db.getTasks();
+        this.adapter.updateTasks(tasks);
     }
 
     public void addActivity(View view){
