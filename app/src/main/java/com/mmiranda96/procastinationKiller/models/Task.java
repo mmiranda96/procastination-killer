@@ -10,22 +10,21 @@ public class Task {
     private Date due;
     private ArrayList<String> subtasks;
 
-    public Task(String title, String description, Date due, String... subtasks) {
+    public Task(String title, String description, Date due, ArrayList<String> subtasks) {
         this.title = title;
         this.description = description;
         this.due = due;
         this.subtasks = new ArrayList<>();
-        this.subtasks.addAll(Arrays.asList(subtasks));
+        this.subtasks.addAll(subtasks);
     }
 
 
-    public Task(int id, String title, String description, Date due, String... subtasks) {
+    public Task(int id, String title, String description, Date due) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.due = due;
         this.subtasks = new ArrayList<>();
-        this.subtasks.addAll(Arrays.asList(subtasks));
     }
 
     public void addSubtask(String subtask) {
@@ -46,18 +45,18 @@ public class Task {
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public Date getDue() {
-        return due;
+        return this.due;
     }
 
     public ArrayList<String> getSubtasks() {
-        return subtasks;
+        return new ArrayList<>(this.subtasks);
     }
 }
