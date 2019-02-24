@@ -1,10 +1,11 @@
 package com.mmiranda96.procastinationKiller.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
-public class Task {
+public class Task implements Serializable {
     private int id;
     private String title, description;
     private Date due;
