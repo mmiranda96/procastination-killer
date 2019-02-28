@@ -11,7 +11,7 @@
         android:layout_width="212dp"
         android:layout_height="213dp"
         android:layout_marginStart="100dp"
-        android:layout_marginTop="125dp"
+        android:layout_marginTop="80dp"
         android:layout_marginEnd="100dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,8 +53,20 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="125dp"
         android:onClick="login"
-        android:text="SUBMIT"
+        android:text="Log in"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextLoginPassword" />
+
+    <Button
+        android:id="@+id/buttonLoginActivitySignIn"
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="55dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="55dp"
+        android:text="Sign in"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonLoginSubmit" />
 </android.support.constraint.ConstraintLayout>

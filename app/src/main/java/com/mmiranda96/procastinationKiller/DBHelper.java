@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.mmiranda96.procastinationKiller.models.Task;
+import com.mmiranda96.procastinationKiller.models.User;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,6 +38,14 @@ public class DBHelper extends SQLiteOpenHelper {
             "    FOREIGN KEY (task_id) REFERENCES task(id)" +
             ");";
         db.execSQL(querySubtask);
+
+        final String queryUsers =
+                "CREATE TABLE users(" +
+                        "    id INTEGER PRIMARY KEY, " +
+                        "    username VARCHAR(64), " +
+                        "    password TEXT" +
+                        ");" ;
+        db.execSQL(queryUsers);
     }
 
     @Override
@@ -48,6 +57,10 @@ public class DBHelper extends SQLiteOpenHelper {
         final String queryTask =
             "DROP TABLE IF EXISTS task";
         db.execSQL(queryTask);
+
+        final String queryUsers =
+                "DROP TABLE IF EXISTS users;";
+        db.execSQL(queryUsers);
 
         onCreate(db);
     }
@@ -106,4 +119,36 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return tasks;
     }
+
+    public void createUser(User user){
+        SQLiteDatabase db = getWritableDatabase();
+
+        final String queryTask =
+                "INSERT INTO users(username, password)" +
+                        "VALUES ($1, $2)";
+        Object argsTask[] = {user.getUsername(), user.getPassword()};
+        db.execSQL(queryTask, argsTask);
+    }
+
+    public ArrayList<User> getUsers() {
+        ArrayList<User> users = new ArrayList<>();
+
+        SQLiteDatabase db = getReadableDatabase();
+        final String queryUsers =
+                "SELECT id, username, password " +
+                        "FROM users";
+        Cursor cursor = db.rawQuery(queryUsers, new String[]{});
+
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(0);
+            String username = cursor.getString(1);
+            String password = cursor.getString(2);
+            User newUser = new User(username, password);
+            users.add(newUser);
+        }
+        
+        return users;
+    }
+
+
 }
