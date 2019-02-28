@@ -27,7 +27,9 @@ public class LoginActivity extends AppCompatActivity {
         this.password = findViewById(R.id.editTextLoginPassword);
 
         // user test
+        this.db.createUser(new User("Test", "111"));
         this.db.createUser(new User("Rosa", "123"));
+
     }
 
     public void login(View v) {
@@ -36,12 +38,12 @@ public class LoginActivity extends AppCompatActivity {
 
         ArrayList<User> users = this.db.getUsers();
         for( int i = 0; i < users.size(); i++ ){
-            if( users.get(i).getUsername().equals(username) ){
-                if( users.get(i).getPassword().equals(password) ){
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    intent.putExtra("Username", username);
-                    startActivity(intent);
-                }
+            if( users.get(i).getUsername().equals(username) && users.get(i).getPassword().equals(password) ){
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.putExtra("Username", username);
+                startActivity(intent);
+            }else{
+                Toast.makeText(getApplicationContext(), "Sorry, your credentials are incorrect.", Toast.LENGTH_LONG).show();
             }
         }
     }
