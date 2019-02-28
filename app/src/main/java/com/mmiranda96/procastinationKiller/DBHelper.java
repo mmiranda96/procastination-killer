@@ -123,11 +123,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public void createUser(User user){
         SQLiteDatabase db = getWritableDatabase();
 
-        final String queryTask =
+        final String queryUser =
                 "INSERT INTO users(username, password)" +
                         "VALUES ($1, $2)";
-        Object argsTask[] = {user.getUsername(), user.getPassword()};
-        db.execSQL(queryTask, argsTask);
+        Object argsUser[] = {user.getUsername(), user.getPassword()};
+        db.execSQL(queryUser, argsUser);
     }
 
     public ArrayList<User> getUsers() {
@@ -146,7 +146,7 @@ public class DBHelper extends SQLiteOpenHelper {
             User newUser = new User(username, password);
             users.add(newUser);
         }
-        
+
         return users;
     }
 
