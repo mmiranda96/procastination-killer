@@ -41,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
             if( users.get(i).getUsername().equals(username) && users.get(i).getPassword().equals(password) ){
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.putExtra("Username", username);
+                intent.putExtra("Password", password);
                 startActivity(intent);
                 return;
             }

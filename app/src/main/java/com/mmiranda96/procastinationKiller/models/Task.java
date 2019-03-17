@@ -1,5 +1,9 @@
 package com.mmiranda96.procastinationKiller.models;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,6 +23,23 @@ public class Task implements Serializable {
         this.subtasks.addAll(subtasks);
     }
 
+    public Task(JSONObject jsonTask){
+        try {
+            this.id = jsonTask.getInt("id");
+            this.title = jsonTask.getString("title");
+            this.description = jsonTask.optString("description");
+            long epoch = jsonTask.getLong("due");
+            this.due = new Date(epoch);
+            ArrayList<String> subtasks = new ArrayList<String>();
+            JSONArray subtasksJSON = jsonTask.getJSONArray("subtasks");
+            for(int i = 0; i < subtasksJSON.length(); i++){
+                subtasks.add(subtasksJSON.getString(i));
+            }
+            this.subtasks = subtasks;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
     public Task(int id, String title, String description, Date due) {
         this.id = id;

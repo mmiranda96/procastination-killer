@@ -13,18 +13,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mmiranda96.procastinationKiller.adapters.TaskListAdapter;
+import com.mmiranda96.procastinationKiller.asyncTasks.GetTasks;
 import com.mmiranda96.procastinationKiller.models.Task;
 
 import java.util.ArrayList;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GetTasks.RequestListener {
     private static final int ADD_TASK_ACTIVITY_CODE = 0;
 
     private DBHelper db;
     private ListView taskList;
     private TaskListAdapter adapter;
     private ArrayList<Task> tasks;
+    private String currentUser;
+    private String currentPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +51,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Intent intent = getIntent();
-        String username = intent.getStringExtra("Username");
-        Toast.makeText(getApplicationContext(), "Hello "+username, Toast.LENGTH_SHORT).show();
+        currentUser = intent.getStringExtra("Username");
+        currentPassword = intent.getStringExtra("Password");
+        Toast.makeText(getApplicationContext(), "Hello "+currentUser, Toast.LENGTH_SHORT).show();
     }
 
     private void refreshTaskList() {
@@ -70,5 +74,18 @@ public class MainActivity extends AppCompatActivity {
                     refreshTaskList();
             }
         }
+    }
+
+    public void doRequest(View v){
+        GetTasks task = new GetTasks(this);
+        task.execute("10.0.2.2:8080", currentUser, currentPassword);
+    }
+
+    @Override
+    public void getTasksRequestDone(ArrayList<Task> result) {
+        for(int i = 0; i<result.size(); i++){
+            Log.wtf("Task", result.get(i).toString());
+        }
+        Toast.makeText(getApplicationContext(),result.get(0).toString(), Toast.LENGTH_SHORT);
     }
 }

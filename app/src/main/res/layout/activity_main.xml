@@ -23,12 +23,22 @@
     <ListView
         android:id="@+id/listViewMainActivityTaskList"
         android:layout_width="300dp"
-        android:layout_height="600dp"
+        android:layout_height="550dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:descendantFocusability="blocksDescendants"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonMainAddTask" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:onClick="doRequest"
+        android:text="Button"
+        app:layout_constraintTop_toTopOf="@+id/listViewMainActivityTaskList"
+        tools:layout_editor_absoluteX="151dp" />
 
 </android.support.constraint.ConstraintLayout>
