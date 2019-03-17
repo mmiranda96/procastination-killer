@@ -1,8 +1,8 @@
 package com.mmiranda96.procastinationKiller;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -42,11 +42,9 @@ public class LoginActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.putExtra("Username", username);
                 startActivity(intent);
-            }else{
-                Toast.makeText(getApplicationContext(), "Sorry, your credentials are incorrect.", Toast.LENGTH_LONG).show();
+                return;
             }
         }
+        Toast.makeText(getApplicationContext(), "Sorry, your credentials are incorrect.", Toast.LENGTH_SHORT).show();
     }
-
-
 }
