@@ -1,14 +1,12 @@
 package com.mmiranda96.procastinationKiller.asyncTasks;
 
 import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.mmiranda96.procastinationKiller.models.Task;
+import com.mmiranda96.procastinationKiller.models.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,40 +16,43 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Base64;
 
-public class GetTasks extends AsyncTask<String, Void, ArrayList<Task>> {
+public class GetTasksAsyncTask extends AsyncTask<User, Void, ArrayList<Task>> {
 
+    public interface RequestListener{
+        void getTasksRequestDone(ArrayList<Task> result);
+    }
+
+    private String host;
     private RequestListener listener;
 
-    public GetTasks(RequestListener listener){
+    public GetTasksAsyncTask(String host, RequestListener listener){
+        this.host = host;
         this.listener = listener;
     }
 
     @Override
-    protected ArrayList<Task> doInBackground(String... strings) {
-        if (strings.length != 3) throw new AssertionError("Invalid number of parameters");
-
+    protected ArrayList<Task> doInBackground(User... users) {
         ArrayList<Task> result = new ArrayList<>();
+
         try{
-            URL url = new URL(strings[0]);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            User user = users[0];
 
-            String authentication = strings[1] + ":" + strings[2];
-            String encodedAuthentication = Base64.getEncoder().encodeToString(authentication.getBytes());
-            connection.setRequestProperty("Authorization", "Basic: " + encodedAuthentication);
+            URL url = new URL(this.host + "/tasks");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            String authentication = user.buildAuthentication();
+            conn.setRequestProperty("Authorization", "Basic: " + authentication);
+            conn.setRequestMethod("GET");
 
-            int code = connection.getResponseCode();
+            int code = conn.getResponseCode();
             if(code == HttpURLConnection.HTTP_OK){
-
-                InputStream is = connection.getInputStream();
+                InputStream is = conn.getInputStream();
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
                 StringBuilder builder = new StringBuilder();
                 String currentLine = "";
 
                 while((currentLine = br.readLine())!=null){
-                    Log.wtf("HTTP RESPONSE", currentLine);
                     builder.append(currentLine);
                 }
 
@@ -61,9 +62,9 @@ public class GetTasks extends AsyncTask<String, Void, ArrayList<Task>> {
                     result.add(new Task(jsonTasks.getJSONObject(i)));
                 }
             }
-        }catch(MalformedURLException e){
+        } catch(MalformedURLException e){
             e.printStackTrace();
-        }catch (IOException e){
+        } catch (IOException e){
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -73,14 +74,7 @@ public class GetTasks extends AsyncTask<String, Void, ArrayList<Task>> {
     }
 
     @Override
-    public void onPostExecute(ArrayList<Task> result) {
+    protected void onPostExecute(ArrayList<Task> result) {
         this.listener.getTasksRequestDone(result);
     }
-
-    public interface RequestListener{
-        public void getTasksRequestDone(ArrayList<Task> result);
-
-    }
-
-
 }

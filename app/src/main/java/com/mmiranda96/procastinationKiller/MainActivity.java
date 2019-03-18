@@ -2,42 +2,37 @@ package com.mmiranda96.procastinationKiller;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mmiranda96.procastinationKiller.adapters.TaskListAdapter;
-import com.mmiranda96.procastinationKiller.asyncTasks.GetTasks;
+import com.mmiranda96.procastinationKiller.asyncTasks.GetTasksAsyncTask;
 import com.mmiranda96.procastinationKiller.models.Task;
+import com.mmiranda96.procastinationKiller.models.User;
 
 import java.util.ArrayList;
-import java.util.Date;
 
-public class MainActivity extends AppCompatActivity implements GetTasks.RequestListener {
+public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask.RequestListener {
     private static final int ADD_TASK_ACTIVITY_CODE = 0;
 
-    private DBHelper db;
     private ListView taskList;
     private TaskListAdapter adapter;
     private ArrayList<Task> tasks;
-    private String currentUser;
-    private String currentPassword;
+    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        this.db = new DBHelper(getApplicationContext());
         this.taskList = findViewById(R.id.listViewMainActivityTaskList);
-        this.tasks = this.db.getTasks();
 
+        this.tasks = new ArrayList<>();
         this.adapter = new TaskListAdapter(this, this.tasks);
         this.taskList.setAdapter(adapter);
         this.taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -51,15 +46,14 @@ public class MainActivity extends AppCompatActivity implements GetTasks.RequestL
         });
 
         Intent intent = getIntent();
-        currentUser = intent.getStringExtra("Username");
-        currentPassword = intent.getStringExtra("Password");
+        String username = intent.getStringExtra("Username");
+        String password = intent.getStringExtra("Password");
+        this.currentUser = new User(username, password);
+        this.getTasks();
+
         Toast.makeText(getApplicationContext(), "Hello "+currentUser, Toast.LENGTH_SHORT).show();
     }
 
-    private void refreshTaskList() {
-        this.tasks = this.db.getTasks();
-        this.adapter.updateTasks(tasks);
-    }
 
     public void addActivity(View view){
         Intent intent = new Intent(getApplicationContext(), AddTaskActivity.class);
@@ -71,21 +65,22 @@ public class MainActivity extends AppCompatActivity implements GetTasks.RequestL
         if (requestCode == ADD_TASK_ACTIVITY_CODE) {
             switch (resultCode) {
                 case Activity.RESULT_OK:
-                    refreshTaskList();
+                    getTasks();
             }
         }
     }
 
-    public void doRequest(View v){
-        GetTasks task = new GetTasks(this);
-        task.execute("10.0.2.2:8080", currentUser, currentPassword);
+    public void getTasks() {
+        GetTasksAsyncTask task = new GetTasksAsyncTask(Server.URL, this);
+        task.execute(this.currentUser);
     }
 
     @Override
     public void getTasksRequestDone(ArrayList<Task> result) {
-        for(int i = 0; i<result.size(); i++){
-            Log.wtf("Task", result.get(i).toString());
-        }
-        Toast.makeText(getApplicationContext(),result.get(0).toString(), Toast.LENGTH_SHORT);
+        Log.i("Task", result.toString());
+        this.tasks = new ArrayList<>(result);
+        adapter.updateTasks(this.tasks);
+        taskList.setAdapter(adapter);
+        // TODO: fix UI reload
     }
 }

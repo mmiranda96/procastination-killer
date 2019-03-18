@@ -7,45 +7,60 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.mmiranda96.procastinationKiller.asyncTasks.LoginAsyncTask;
 import com.mmiranda96.procastinationKiller.models.User;
 
-import java.util.ArrayList;
+public class LoginActivity extends AppCompatActivity implements LoginAsyncTask.RequestListener {
+    private User user;
 
-public class LoginActivity extends AppCompatActivity {
-    // TODO: handle password EditText
     private EditText username;
     private EditText password;
-    private DBHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        this.db = new DBHelper(getApplicationContext());
         this.username = findViewById(R.id.editTextLoginUsername);
         this.password = findViewById(R.id.editTextLoginPassword);
-
-        // user test
-        this.db.createUser(new User("Test", "111"));
-        this.db.createUser(new User("Rosa", "123"));
-
     }
 
     public void login(View v) {
         String username = this.username.getText().toString();
         String password = this.password.getText().toString();
+        this.user = new User(username, password);
 
-        ArrayList<User> users = this.db.getUsers();
-        for( int i = 0; i < users.size(); i++ ){
-            if( users.get(i).getUsername().equals(username) && users.get(i).getPassword().equals(password) ){
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.putExtra("Username", username);
-                intent.putExtra("Password", password);
-                startActivity(intent);
-                return;
-            }
+        LoginAsyncTask loginTask = new LoginAsyncTask(Server.URL, this);
+        loginTask.execute(this.user);
+    }
+
+    @Override
+    public void loginRequestDone(Integer result) {
+        switch (result) {
+            case LoginAsyncTask.SUCCESS:
+                launchMainActivity();
+                break;
+            case LoginAsyncTask.FAILURE:
+                displayFailureMessage();
+                break;
+            default:
+                displayErrorMessage();
         }
-        Toast.makeText(getApplicationContext(), "Sorry, your credentials are incorrect.", Toast.LENGTH_SHORT).show();
+    }
+
+    private void launchMainActivity() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.putExtra("User", this.user);
+        startActivity(intent);
+    }
+
+    private void displayFailureMessage() {
+        // TODO: proper message
+        Toast.makeText(getApplicationContext(), "Invalid email and/or password", Toast.LENGTH_SHORT).show();
+    }
+
+    private void displayErrorMessage() {
+        // TODO: proper message
+        Toast.makeText(getApplicationContext(), "An error ocurred. Please try later.", Toast.LENGTH_SHORT).show();
     }
 }
