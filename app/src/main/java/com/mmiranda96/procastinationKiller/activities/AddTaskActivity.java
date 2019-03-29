@@ -1,28 +1,37 @@
-package com.mmiranda96.procastinationKiller;
+package com.mmiranda96.procastinationKiller.activities;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.mmiranda96.procastinationKiller.asyncTasks.CreateTaskAsyncTask;
+import com.mmiranda96.procastinationKiller.R;
 import com.mmiranda96.procastinationKiller.models.Task;
+import com.mmiranda96.procastinationKiller.models.User;
+import com.mmiranda96.procastinationKiller.sources.task.CreateTaskAsyncTask;
+import com.mmiranda96.procastinationKiller.sources.task.TaskSource;
+import com.mmiranda96.procastinationKiller.sources.task.TaskSourceFactory;
+import com.mmiranda96.procastinationKiller.util.Server;
 
 import java.util.ArrayList;
 import java.util.Date;
 
 // TODO: this is broken, implement logic with CreateTaskAsyncTask
-public class AddTaskActivity extends AppCompatActivity implements CreateTaskAsyncTask.RequestListener {
+public class AddTaskActivity extends AppCompatActivity implements CreateTaskAsyncTask.Listener {
+    private static final int RESULT_ERROR = 2;
+
     private EditText taskTitle, taskDescription, subtask;
     private ListView subtaskList;
     private Button addSubtask, create;
     private ArrayList<String> subtaskArrayList;
     private ArrayAdapter<String> adapter;
+    private TaskSource taskSource;
     private boolean readOnly;
 
     @Override
@@ -31,7 +40,7 @@ public class AddTaskActivity extends AppCompatActivity implements CreateTaskAsyn
         setContentView(R.layout.activity_add_task);
 
         Intent intent = getIntent();
-        this.readOnly = intent.getBooleanExtra("readOnly", true);
+        this.readOnly = intent.getBooleanExtra("readOnly", false);
         this.taskTitle = findViewById(R.id.editTextAddTaskActivityTitle);
         this.taskDescription = findViewById(R.id.editTextAddTaskActivityDescription);
         this.subtask = findViewById(R.id.editTextAddTaskActivitySubtask);
@@ -40,7 +49,7 @@ public class AddTaskActivity extends AppCompatActivity implements CreateTaskAsyn
         this.create = findViewById(R.id.buttonAddTaskActivityCreateTask);
         this.subtaskArrayList = new ArrayList<>();
 
-        if (!this.readOnly) {
+        if (this.readOnly) {
             Task task = (Task) intent.getSerializableExtra("task");
             if (task != null) {
                 this.taskTitle.setText(task.getTitle());
@@ -58,6 +67,9 @@ public class AddTaskActivity extends AppCompatActivity implements CreateTaskAsyn
                 // TODO: take this from a strings resource
                 this.create.setText("Go back");
             }
+        } else {
+            User user = (User) intent.getSerializableExtra("user");
+            this.taskSource = TaskSourceFactory.newSource(TaskSourceFactory.REMOTE, user, Server.URL);
         }
 
         this.adapter = new ArrayAdapter<>(
@@ -76,24 +88,33 @@ public class AddTaskActivity extends AppCompatActivity implements CreateTaskAsyn
 
     public void createTask(View view) {
         if (this.readOnly) {
+            Intent intent = getIntent();
+            setResult(Activity.RESULT_OK, intent);
+            finish();
+        } else {
             String title = this.taskTitle.getText().toString();
             String description = this.taskDescription.getText().toString();
             Date due = new Date(); // TODO: take user input
             Task task = new Task(title, description, due, this.subtaskArrayList);
-            // TODO: execute CreateTaskAsyncTask
-        }
 
-        Intent intent = getIntent();
-        setResult(Activity.RESULT_OK, intent);
-        finish();
+            CreateTaskAsyncTask asyncTask = taskSource.newCreateTaskAsyncTask(this);
+            asyncTask.execute(task);
+        }
     }
 
     @Override
-    public void createTaskRequestDone(Integer result) {
+    public void createTaskAsyncTaskDone(Integer result) {
+        Log.d("Server", result + "");
         // TODO: implement
+        Intent intent = getIntent();
         switch (result) {
             case CreateTaskAsyncTask.SUCCESS:
+                setResult(Activity.RESULT_OK, intent);
+                break;
             default:
+                setResult(RESULT_ERROR);
+                break;
         }
+        finish();
     }
 }

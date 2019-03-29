@@ -5,41 +5,48 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.mmiranda96.procastinationKiller.InvitePeopleActivity;
 import com.mmiranda96.procastinationKiller.R;
+import com.mmiranda96.procastinationKiller.activities.AddTaskActivity;
+import com.mmiranda96.procastinationKiller.activities.InvitePeopleActivity;
 import com.mmiranda96.procastinationKiller.models.Task;
 
 import java.util.ArrayList;
 
-public class TaskListAdapter extends ArrayAdapter<Task> {
-    private Activity context;
+public class TaskListAdapter extends ArrayAdapter<Task> implements AdapterView.OnItemClickListener {
+    private Activity activity;
     private ArrayList<Task> tasks;
 
-    public TaskListAdapter(Activity context, ArrayList<Task> tasks) {
-        super(context, R.layout.task_list_view, tasks);
-        this.context = context;
+    public TaskListAdapter(Activity activity, ArrayList<Task> tasks) {
+        super(activity, R.layout.task_list_view, tasks);
+        this.activity = activity;
         this.tasks = new ArrayList<>(tasks);
     }
 
-    public void updateTasks(ArrayList<Task> tasks) {
+    public void update(ArrayList<Task> tasks) {
         this.tasks = new ArrayList<>(tasks);
-        Toast.makeText(this.context, "Tasks updated", Toast.LENGTH_SHORT).show();
         this.notifyDataSetChanged();
     }
 
     @Override
-    public View getView(final int position, View view, ViewGroup parent) {
-        LayoutInflater inflater = context.getLayoutInflater();
-        View rowView = inflater.inflate(R.layout.task_list_view, parent,false);
+    public int getCount() {
+        return this.tasks.size();
+    }
 
-        TextView title = rowView.findViewById(R.id.textViewTaskListAdapterTitle);
-        TextView description = rowView.findViewById(R.id.textViewTaskListAdapterDescription);
-        Button addPeople = rowView.findViewById(R.id.buttonTaskListAdapterAddPeople);
+    @Override
+    public View getView(final int position, View view, ViewGroup parent) {
+        LayoutInflater inflater = activity.getLayoutInflater();
+        if (view == null) {
+            view = inflater.inflate(R.layout.task_list_view, parent, false);
+        }
+
+        TextView title = view.findViewById(R.id.textViewTaskListAdapterTitle);
+        TextView description = view.findViewById(R.id.textViewTaskListAdapterDescription);
+        Button addPeople = view.findViewById(R.id.buttonTaskListAdapterAddPeople);
 
         final Task task = this.tasks.get(position);
 
@@ -48,13 +55,21 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
         addPeople.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context.getApplicationContext(), InvitePeopleActivity.class);
+                Intent intent = new Intent(activity.getApplicationContext(), InvitePeopleActivity.class);
                 intent.putExtra("task", task);
-                context.startActivity(intent);
+                intent.putExtra("readOnly", true);
+                activity.startActivity(intent);
             }
         });
 
-        return rowView;
+        return view;
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(activity, AddTaskActivity.class);
+        intent.putExtra("readOnly", true);
+        intent.putExtra("task", this.tasks.get(position));
+        activity.startActivity(intent);
+    }
 }
