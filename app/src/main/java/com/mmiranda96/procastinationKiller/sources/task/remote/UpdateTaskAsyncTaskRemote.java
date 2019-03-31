@@ -2,7 +2,7 @@ package com.mmiranda96.procastinationKiller.sources.task.remote;
 
 import com.mmiranda96.procastinationKiller.models.Task;
 import com.mmiranda96.procastinationKiller.models.User;
-import com.mmiranda96.procastinationKiller.sources.task.CreateTaskAsyncTask;
+import com.mmiranda96.procastinationKiller.sources.task.UpdateTaskAsyncTask;
 import com.mmiranda96.procastinationKiller.util.Server;
 
 import java.io.IOException;
@@ -11,12 +11,12 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-class CreateTaskAsyncTaskRemote extends CreateTaskAsyncTask {
+class UpdateTaskAsyncTaskRemote extends UpdateTaskAsyncTask {
 
     private String server;
     private User user;
 
-    CreateTaskAsyncTaskRemote(String server, User user, Listener listener) {
+    UpdateTaskAsyncTaskRemote(String server, User user, Listener listener) {
         super(listener);
         this.server = server;
         this.user = user;
@@ -24,7 +24,7 @@ class CreateTaskAsyncTaskRemote extends CreateTaskAsyncTask {
 
     @Override
     protected Integer doInBackground(Task... tasks) {
-        int result = CreateTaskAsyncTask.ERROR;
+        int result = UpdateTaskAsyncTask.ERROR;
 
         try {
             Task task = tasks[0];
@@ -34,7 +34,7 @@ class CreateTaskAsyncTaskRemote extends CreateTaskAsyncTask {
             String authentication = user.buildAuthentication();
             conn.setRequestProperty("Authorization", "Basic " + authentication);
             conn.setRequestProperty(Server.CONTENT_TYPE_KEY, Server.CONTENT_TYPE_VALUE);
-            conn.setRequestMethod("POST");
+            conn.setRequestMethod("PUT");
 
             OutputStream os = conn.getOutputStream();
             os.write(task.toJSONObject().toString().getBytes());

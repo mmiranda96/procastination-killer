@@ -12,9 +12,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Title"
         android:focusable="false"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:text="Title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,21 +24,33 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Description"
         android:focusable="false"
+        android:text="Description"
+        android:textSize="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTaskListAdapterTitle" />
 
     <Button
-        android:id="@+id/buttonTaskListAdapterAddPeople"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
+        android:id="@+id/buttonTaskListAdapterEdit"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:descendantFocusability="blocksDescendants"
-        android:text="Add people"
+        android:drawableStart="@android:drawable/ic_menu_edit"
         android:focusable="false"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonTaskListAdapterAddPeople"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:descendantFocusability="blocksDescendants"
+        android:drawableStart="@android:drawable/ic_menu_my_calendar"
+        android:focusable="false"
+        app:layout_constraintEnd_toStartOf="@+id/buttonTaskListAdapterEdit"
         app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

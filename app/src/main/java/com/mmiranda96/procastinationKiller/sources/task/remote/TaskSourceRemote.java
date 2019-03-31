@@ -4,6 +4,7 @@ import com.mmiranda96.procastinationKiller.models.User;
 import com.mmiranda96.procastinationKiller.sources.task.CreateTaskAsyncTask;
 import com.mmiranda96.procastinationKiller.sources.task.GetTasksAsyncTask;
 import com.mmiranda96.procastinationKiller.sources.task.TaskSource;
+import com.mmiranda96.procastinationKiller.sources.task.UpdateTaskAsyncTask;
 
 public class TaskSourceRemote implements TaskSource {
 
@@ -18,6 +19,11 @@ public class TaskSourceRemote implements TaskSource {
     @Override
     public CreateTaskAsyncTask newCreateTaskAsyncTask(CreateTaskAsyncTask.Listener listener) {
         return new CreateTaskAsyncTaskRemote(this.server, this.user, listener);
+    }
+
+    @Override
+    public UpdateTaskAsyncTask newUpdateTaskAsyncTask(UpdateTaskAsyncTask.Listener listener) {
+        return new UpdateTaskAsyncTaskRemote(this.server, this.user, listener);
     }
 
     @Override

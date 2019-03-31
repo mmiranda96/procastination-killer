@@ -15,12 +15,13 @@ import com.mmiranda96.procastinationKiller.models.User;
 import com.mmiranda96.procastinationKiller.sources.task.GetTasksAsyncTask;
 import com.mmiranda96.procastinationKiller.sources.task.TaskSource;
 import com.mmiranda96.procastinationKiller.sources.task.TaskSourceFactory;
+import com.mmiranda96.procastinationKiller.util.IntentExtras;
 import com.mmiranda96.procastinationKiller.util.Server;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask.Listener {
-    private static final int ADD_TASK_ACTIVITY_CODE = 0;
+    public static final int PUT_TASK_ACTIVITY_CODE = 0, ADD_PEOPLE_ACTIVITY_CODE = 1;
 
     private User currentUser;
 
@@ -33,15 +34,17 @@ public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        Intent intent = getIntent();
+        this.currentUser = (User) intent.getSerializableExtra(IntentExtras.USER);
+
         this.taskList = findViewById(R.id.listViewMainActivityTaskList);
 
         ArrayList<Task> tasks = new ArrayList<>();
-        this.adapter = new TaskListAdapter(this, tasks);
+        this.adapter = new TaskListAdapter(this, this.currentUser, tasks);
         this.taskList.setAdapter(adapter);
         this.taskList.setOnItemClickListener(adapter);
 
-        Intent intent = getIntent();
-        this.currentUser = (User) intent.getSerializableExtra("User");
 
         // TODO: use a dependency injection framework. Meanwhile, change REMOTE to FAKE if needed
         this.taskSource = TaskSourceFactory.newSource(
@@ -56,15 +59,14 @@ public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask
     }
 
     public void addActivity(View view){
-        Intent intent = new Intent(getApplicationContext(), AddTaskActivity.class);
-        intent.putExtra("user", this.currentUser);
-        intent.putExtra("readOnly", false);
-        startActivityForResult(intent, ADD_TASK_ACTIVITY_CODE);
+        Intent intent = new Intent(getApplicationContext(), PutTaskActivity.class);
+        intent.putExtra(IntentExtras.USER, this.currentUser);
+        startActivityForResult(intent, PUT_TASK_ACTIVITY_CODE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ADD_TASK_ACTIVITY_CODE) {
+        if (requestCode == PUT_TASK_ACTIVITY_CODE) {
             switch (resultCode) {
                 case Activity.RESULT_OK:
                 case Activity.RESULT_CANCELED:

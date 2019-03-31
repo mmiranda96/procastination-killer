@@ -35,7 +35,7 @@ class GetTasksAsyncTaskRemote extends GetTasksAsyncTask {
             URL url = new URL(this.server + "/tasks");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             String authentication = this.user.buildAuthentication();
-            conn.setRequestProperty("Authorization", "Basic: " + authentication);
+            conn.setRequestProperty("Authorization", "Basic " + authentication);
             conn.setRequestMethod("GET");
 
             int code = conn.getResponseCode();

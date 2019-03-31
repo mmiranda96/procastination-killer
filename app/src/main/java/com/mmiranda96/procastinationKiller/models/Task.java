@@ -1,7 +1,5 @@
 package com.mmiranda96.procastinationKiller.models;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,12 +9,22 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Task implements Serializable {
-    private int id;
+    private Integer id;
     private String title, description;
     private Date due;
     private ArrayList<String> subtasks;
 
+    public Task(int id, String title, String description, Date due, ArrayList<String> subtasks) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.due = due;
+        this.subtasks = new ArrayList<>();
+        this.subtasks.addAll(subtasks);
+    }
+
     public Task(String title, String description, Date due, ArrayList<String> subtasks) {
+        this.id = null;
         this.title = title;
         this.description = description;
         this.due = due;
@@ -31,14 +39,13 @@ public class Task implements Serializable {
             this.description = jsonTask.optString("description");
             long epoch = jsonTask.getLong("due");
             this.due = new Date(epoch);
-            ArrayList<String> subtasks = new ArrayList<String>();
+            ArrayList<String> subtasks = new ArrayList<>();
             JSONArray subtasksJSON = jsonTask.getJSONArray("subtasks");
             for(int i = 0; i < subtasksJSON.length(); i++){
                 subtasks.add(subtasksJSON.getString(i));
             }
             this.subtasks = subtasks;
         } catch (JSONException e) {
-            Log.i("Task", e.toString());
             e.printStackTrace();
         }
     }
@@ -53,6 +60,10 @@ public class Task implements Serializable {
 
     public void addSubtask(String subtask) {
         this.subtasks.add(subtask);
+    }
+
+    public int getId() {
+        return this.id == null ? 0 : this.id;
     }
 
     public String getTitle() {
@@ -74,6 +85,9 @@ public class Task implements Serializable {
     public JSONObject toJSONObject() {
         JSONObject result = new JSONObject();
         try {
+            if (this.id != null) {
+                result.put("id", this.id);
+            }
             result.put("title", this.title);
             result.put("description", this.description);
             result.put("due", this.due.getTime());
