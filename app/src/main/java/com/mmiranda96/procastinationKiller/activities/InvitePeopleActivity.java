@@ -1,11 +1,12 @@
-package com.mmiranda96.procastinationKiller;
+package com.mmiranda96.procastinationKiller.activities;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.mmiranda96.procastinationKiller.R;
 import com.mmiranda96.procastinationKiller.models.Task;
 
 public class InvitePeopleActivity extends AppCompatActivity {
