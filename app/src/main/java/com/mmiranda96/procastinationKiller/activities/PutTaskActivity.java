@@ -59,9 +59,11 @@ public class PutTaskActivity extends AppCompatActivity implements CreateTaskAsyn
             this.taskTitle.setText(this.task.getTitle());
             this.taskDescription.setText(this.task.getDescription());
             this.subtaskArrayList = new ArrayList<>(task.getSubtasks());
+            this.create.setText("Update");
         } else {
             this.isNewTask = true;
             this.subtaskArrayList = new ArrayList<>();
+            this.create.setText("Create");
         }
 
         this.adapter = new SubtaskListAdapter(this, subtaskArrayList);
@@ -75,10 +77,11 @@ public class PutTaskActivity extends AppCompatActivity implements CreateTaskAsyn
         this.subtask.setText("");
     }
 
-    public void createTask(View view) {
+    public void putTask(View view) {
         String title = this.taskTitle.getText().toString();
         String description = this.taskDescription.getText().toString();
         Date due = new Date(); // TODO: take user input
+        //ArrayList<String> subtasks =
 
         if (this.isNewTask) {
             Task task = new Task(title, description, due, this.subtaskArrayList);

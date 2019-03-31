@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.mmiranda96.procastinationKiller.R;
@@ -19,7 +19,7 @@ public class SubtaskListAdapter extends ArrayAdapter<String> {
     public SubtaskListAdapter(Activity activity, ArrayList<String> subtasks) {
         super(activity, R.layout.task_list_view, subtasks);
         this.activity = activity;
-        this.subtasks = new ArrayList<>(subtasks);
+        this.subtasks = subtasks;
     }
 
     public void update(ArrayList<String> subtasks) {
@@ -40,13 +40,24 @@ public class SubtaskListAdapter extends ArrayAdapter<String> {
         }
 
         TextView title = view.findViewById(R.id.textViewSubtaskListAdapterTitle);
-        Button deleteButton = view.findViewById(R.id.buttonSubtaskListAdapterDelete);
+        ImageButton deleteButton = view.findViewById(R.id.buttonSubtaskListAdapterDelete);
 
         final String subtask = this.subtasks.get(position);
 
         title.setText(subtask);
-        // TODO: add listener to delete button
+        deleteButton.setOnClickListener(new ImageButton.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                SubtaskListAdapter.this.remove(position);
+            }
+        });
 
         return view;
+    }
+
+    private void remove(int position) {
+        this.subtasks.remove(position);
+        this.notifyDataSetChanged();
     }
 }
