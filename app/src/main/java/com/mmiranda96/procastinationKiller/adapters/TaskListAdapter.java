@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.mmiranda96.procastinationKiller.R;
 import com.mmiranda96.procastinationKiller.activities.AddTaskActivity;
 import com.mmiranda96.procastinationKiller.activities.InvitePeopleActivity;
+import com.mmiranda96.procastinationKiller.activities.TaskDetailActivity;
 import com.mmiranda96.procastinationKiller.models.Task;
 
 import java.util.ArrayList;
@@ -67,8 +68,7 @@ public class TaskListAdapter extends ArrayAdapter<Task> implements AdapterView.O
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(activity, AddTaskActivity.class);
-        intent.putExtra("readOnly", true);
+        Intent intent = new Intent(activity, TaskDetailActivity.class);
         intent.putExtra("task", this.tasks.get(position));
         activity.startActivity(intent);
     }
