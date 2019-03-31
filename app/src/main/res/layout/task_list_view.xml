@@ -12,9 +12,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Title"
         android:focusable="false"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:text="Title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,20 +25,28 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Description"
+        android:textSize="8dp"
         android:focusable="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTaskListAdapterTitle" />
 
-    <Button
-        android:id="@+id/buttonTaskListAdapterAddPeople"
-        style="@style/Widget.AppCompat.Button.Colored"
+    <ImageButton
+        android:id="@+id/buttonTaskListAdapterEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:descendantFocusability="blocksDescendants"
-        android:text="Add people"
-        android:focusable="false"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_edit" />
+
+    <ImageButton
+        android:id="@+id/buttonTaskListAdapterAddPeople"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/buttonTaskListAdapterEdit"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_my_calendar" />
 </android.support.constraint.ConstraintLayout>

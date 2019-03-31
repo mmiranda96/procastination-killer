@@ -32,7 +32,7 @@ class UpdateTaskAsyncTaskRemote extends UpdateTaskAsyncTask {
             URL url = new URL(this.server + "/tasks");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             String authentication = user.buildAuthentication();
-            conn.setRequestProperty("Authorization", "Basic: " + authentication);
+            conn.setRequestProperty("Authorization", "Basic " + authentication);
             conn.setRequestProperty(Server.CONTENT_TYPE_KEY, Server.CONTENT_TYPE_VALUE);
             conn.setRequestMethod("PUT");
 

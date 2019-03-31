@@ -1,7 +1,5 @@
 package com.mmiranda96.procastinationKiller.sources.user.remote;
 
-import android.util.Log;
-
 import com.mmiranda96.procastinationKiller.models.User;
 import com.mmiranda96.procastinationKiller.sources.user.LoginAsyncTask;
 import com.mmiranda96.procastinationKiller.util.Server;
@@ -25,15 +23,13 @@ class LoginAsyncTaskRemote extends LoginAsyncTask {
     protected Integer doInBackground(User... users) {
         int result = ERROR;
 
-        Log.i("Login", "Received request");
-
         try {
             User user = users[0];
 
             URL url = new URL(this.server + "/users/login");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             String authentication = user.buildAuthentication();
-            conn.setRequestProperty("Authorization", "Basic: " + authentication);
+            conn.setRequestProperty("Authorization", "Basic " + authentication);
             conn.setRequestProperty(Server.CONTENT_TYPE_KEY, Server.CONTENT_TYPE_VALUE);
             conn.setRequestMethod("POST");
 

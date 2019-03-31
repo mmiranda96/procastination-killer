@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".activities.TaskDetailActivity"></activity>
         <activity android:name=".activities.InvitePeopleActivity" />
-        <activity android:name=".activities.AddTaskActivity" />
+        <activity android:name=".activities.PutTaskActivity" />
         <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.LoginActivity">
             <intent-filter>

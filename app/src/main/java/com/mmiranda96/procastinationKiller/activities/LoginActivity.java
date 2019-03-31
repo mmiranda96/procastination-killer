@@ -3,7 +3,6 @@ package com.mmiranda96.procastinationKiller.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -13,6 +12,7 @@ import com.mmiranda96.procastinationKiller.models.User;
 import com.mmiranda96.procastinationKiller.sources.user.LoginAsyncTask;
 import com.mmiranda96.procastinationKiller.sources.user.UserSource;
 import com.mmiranda96.procastinationKiller.sources.user.UserSourceFactory;
+import com.mmiranda96.procastinationKiller.util.IntentExtras;
 import com.mmiranda96.procastinationKiller.util.Server;
 
 public class LoginActivity extends AppCompatActivity implements LoginAsyncTask.Listener {
@@ -33,7 +33,6 @@ public class LoginActivity extends AppCompatActivity implements LoginAsyncTask.L
 
         // TODO: use a dependency injection framework. Meanwhile, change REMOTE to FAKE if needed
         this.userSource = UserSourceFactory.newSource(UserSourceFactory.REMOTE, Server.URL);
-        Log.i("refactor", "Creates MainActivity");
     }
 
     public void login(View v) {
@@ -61,7 +60,7 @@ public class LoginActivity extends AppCompatActivity implements LoginAsyncTask.L
 
     private void launchMainActivity() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        intent.putExtra("User", this.user);
+        intent.putExtra(IntentExtras.USER, this.user);
         startActivity(intent);
     }
 
