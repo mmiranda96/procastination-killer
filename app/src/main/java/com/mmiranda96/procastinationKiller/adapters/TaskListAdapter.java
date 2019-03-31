@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.mmiranda96.procastinationKiller.R;
@@ -52,14 +52,14 @@ public class TaskListAdapter extends ArrayAdapter<Task> implements AdapterView.O
 
         TextView title = view.findViewById(R.id.textViewTaskListAdapterTitle);
         TextView description = view.findViewById(R.id.textViewTaskListAdapterDescription);
-        ImageButton addPeople = view.findViewById(R.id.buttonTaskListAdapterAddPeople);
-        ImageButton edit = view.findViewById(R.id.buttonTaskListAdapterEdit);
+        Button addPeople = view.findViewById(R.id.buttonTaskListAdapterAddPeople);
+        Button edit = view.findViewById(R.id.buttonTaskListAdapterEdit);
 
         final Task task = this.tasks.get(position);
 
         title.setText(task.getTitle());
         description.setText(task.getDescription());
-        addPeople.setOnClickListener(new View.OnClickListener() {
+        addPeople.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(activity.getApplicationContext(), InvitePeopleActivity.class);
@@ -67,7 +67,7 @@ public class TaskListAdapter extends ArrayAdapter<Task> implements AdapterView.O
                 activity.startActivityForResult(intent, MainActivity.ADD_PEOPLE_ACTIVITY_CODE);
             }
         });
-        edit.setOnClickListener(new View.OnClickListener() {
+        edit.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(activity.getApplicationContext(), PutTaskActivity.class);
