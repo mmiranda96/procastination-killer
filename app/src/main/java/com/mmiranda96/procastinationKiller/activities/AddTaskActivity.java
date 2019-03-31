@@ -84,6 +84,7 @@ public class AddTaskActivity extends AppCompatActivity implements CreateTaskAsyn
         String subtask = this.subtask.getText().toString();
         this.subtaskArrayList.add(subtask);
         this.adapter.notifyDataSetChanged();
+        this.subtask.setText("");
     }
 
     public void createTask(View view) {
