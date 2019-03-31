@@ -32,15 +32,14 @@ public class AddTaskActivity extends AppCompatActivity implements CreateTaskAsyn
     private ArrayList<String> subtaskArrayList;
     private ArrayAdapter<String> adapter;
     private TaskSource taskSource;
-    private boolean readOnly;
+    private Task task;
+    private boolean isNewTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
 
-        Intent intent = getIntent();
-        this.readOnly = intent.getBooleanExtra("readOnly", false);
         this.taskTitle = findViewById(R.id.editTextAddTaskActivityTitle);
         this.taskDescription = findViewById(R.id.editTextAddTaskActivityDescription);
         this.subtask = findViewById(R.id.editTextAddTaskActivitySubtask);
@@ -49,27 +48,22 @@ public class AddTaskActivity extends AppCompatActivity implements CreateTaskAsyn
         this.create = findViewById(R.id.buttonAddTaskActivityCreateTask);
         this.subtaskArrayList = new ArrayList<>();
 
-        if (this.readOnly) {
+        Intent intent = getIntent();
+
+        User user = (User) intent.getSerializableExtra("user");
+        this.taskSource = TaskSourceFactory.newSource(TaskSourceFactory.REMOTE, user, Server.URL);
+
+        this.task = (Task) intent.getSerializableExtra("task");
+        if (this.task != null) {
             Task task = (Task) intent.getSerializableExtra("task");
             if (task != null) {
-                this.taskTitle.setText(task.getTitle());
-                this.taskDescription.setText(task.getDescription());
+                this.isNewTask = false;
+                this.taskTitle.setText(this.task.getTitle());
+                this.taskDescription.setText(this.task.getDescription());
                 this.subtaskArrayList = new ArrayList<>(task.getSubtasks());
-
-                this.taskTitle.setEnabled(false);
-                this.taskTitle.setEnabled(false);
-                this.taskDescription.setEnabled(false);
-                this.subtask.setEnabled(false);
-                this.subtask.setText("");
-                this.subtaskList.setEnabled(false);
-                this.addSubtask.setEnabled(false);
-
-                // TODO: take this from a strings resource
-                this.create.setText("Go back");
             }
         } else {
-            User user = (User) intent.getSerializableExtra("user");
-            this.taskSource = TaskSourceFactory.newSource(TaskSourceFactory.REMOTE, user, Server.URL);
+            this.isNewTask = true;
         }
 
         this.adapter = new ArrayAdapter<>(
@@ -88,18 +82,16 @@ public class AddTaskActivity extends AppCompatActivity implements CreateTaskAsyn
     }
 
     public void createTask(View view) {
-        if (this.readOnly) {
-            Intent intent = getIntent();
-            setResult(Activity.RESULT_OK, intent);
-            finish();
-        } else {
-            String title = this.taskTitle.getText().toString();
-            String description = this.taskDescription.getText().toString();
-            Date due = new Date(); // TODO: take user input
-            Task task = new Task(title, description, due, this.subtaskArrayList);
+        String title = this.taskTitle.getText().toString();
+        String description = this.taskDescription.getText().toString();
+        Date due = new Date(); // TODO: take user input
+        Task task = new Task(title, description, due, this.subtaskArrayList);
 
+        if (this.isNewTask) {
             CreateTaskAsyncTask asyncTask = taskSource.newCreateTaskAsyncTask(this);
             asyncTask.execute(task);
+        } else {
+            // TODO: execute UpdateTaskAsyncTask
         }
     }
 
