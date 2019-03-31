@@ -6,4 +6,76 @@
     android:layout_height="match_parent"
     tools:context=".activities.TaskDetailActivity">
 
+    <TextView
+        android:id="@+id/textViewTaskDetailActivityTitle"
+        android:layout_width="300dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="55dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="55dp"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewTaskDetailActivityTaskDescription"
+        android:layout_width="300dp"
+        android:layout_height="110dp"
+        android:layout_marginStart="55dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="55dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTaskDetailActivityTitle" />
+
+    <ListView
+        android:id="@+id/listViewTaskDetailActivitySubtasks"
+        android:layout_width="300dp"
+        android:layout_height="181dp"
+        android:layout_marginStart="55dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="55dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTaskDetailActivitySubtasks" />
+
+    <Button
+        android:id="@+id/buttonTaskDetailsActivityBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="55dp"
+        android:layout_marginTop="300dp"
+        android:clickable="false"
+        android:onClick="changeToMainActivity"
+        android:text="Go back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTaskDetailActivityTaskDescription" />
+
+    <Button
+        android:id="@+id/buttonTaskDetailActivityMap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="300dp"
+        android:layout_marginEnd="55dp"
+        android:onClick="changeToLocationMapActivity"
+        android:text="Location map"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTaskDetailActivityTaskDescription" />
+
+    <TextView
+        android:id="@+id/textViewTaskDetailActivitySubtasks"
+        android:layout_width="300dp"
+        android:layout_height="48dp"
+
+        android:layout_marginStart="55dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="55dp"
+        android:text="Subtasks"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTaskDetailActivityTaskDescription" />
+
 </android.support.constraint.ConstraintLayout>
