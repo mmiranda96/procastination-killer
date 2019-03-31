@@ -1,7 +1,7 @@
 package com.mmiranda96.procastinationKiller.sources.user.remote;
 
 import com.mmiranda96.procastinationKiller.models.User;
-import com.mmiranda96.procastinationKiller.sources.user.LoginAsyncTask;
+import com.mmiranda96.procastinationKiller.sources.user.SignupAsyncTask;
 import com.mmiranda96.procastinationKiller.util.Server;
 
 import java.io.IOException;
@@ -10,10 +10,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-class LoginAsyncTaskRemote extends LoginAsyncTask {
+class SignupAsyncTaskRemote extends SignupAsyncTask {
     private String server;
 
-    LoginAsyncTaskRemote(String server, Listener listener) {
+    SignupAsyncTaskRemote(String server, Listener listener) {
         super(listener);
         this.server = server;
     }
@@ -25,7 +25,7 @@ class LoginAsyncTaskRemote extends LoginAsyncTask {
         try {
             User user = users[0];
 
-            URL url = new URL(this.server + "/users/login");
+            URL url = new URL(this.server + "/users");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             String authentication = user.buildAuthentication();
             conn.setRequestProperty("Authorization", "Basic " + authentication);
@@ -41,7 +41,7 @@ class LoginAsyncTaskRemote extends LoginAsyncTask {
                 case HttpURLConnection.HTTP_OK:
                     result = SUCCESS;
                     break;
-                case HttpURLConnection.HTTP_FORBIDDEN:
+                case HttpURLConnection.HTTP_CONFLICT:
                     result = FAILURE;
                     break;
                 default:
