@@ -73,4 +73,9 @@ public class LoginActivity extends AppCompatActivity implements LoginAsyncTask.L
         // TODO: proper message
         Toast.makeText(getApplicationContext(), "An error occurred. Please try later.", Toast.LENGTH_SHORT).show();
     }
+
+    public void signup(View view) {
+        Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
+        startActivity(intent);
+    }
 }
