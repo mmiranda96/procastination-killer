@@ -61,6 +61,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     }
 
     public void changeToLocationMapActivity(View v) {
-        //TODO go to activity
+        Intent intent = new Intent(this, MapActivity.class);
+        startActivity(intent);
     }
 }
