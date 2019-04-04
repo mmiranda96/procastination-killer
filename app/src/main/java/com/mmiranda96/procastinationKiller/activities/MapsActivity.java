@@ -24,7 +24,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapActivity extends FragmentActivity implements
+public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback,
         GoogleMap.OnMapClickListener,
         GoogleApiClient.ConnectionCallbacks,
