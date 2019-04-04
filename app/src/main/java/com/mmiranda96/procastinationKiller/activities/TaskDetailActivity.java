@@ -61,7 +61,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     }
 
     public void changeToLocationMapActivity(View v) {
-        Intent intent = new Intent(this, MapActivity.class);
+        Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
     }
 }
