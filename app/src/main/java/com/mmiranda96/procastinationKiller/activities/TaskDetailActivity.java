@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.mmiranda96.procastinationKiller.R;
 import com.mmiranda96.procastinationKiller.models.Task;
+import com.mmiranda96.procastinationKiller.util.IntentExtras;
 
 import java.util.ArrayList;
 
@@ -37,7 +38,7 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         // TODO: add detail functionality here
         Intent intent = getIntent();
-        Task task = (Task) intent.getSerializableExtra("task");
+        Task task = (Task) intent.getSerializableExtra(IntentExtras.TASK);
         if (task != null) {
             // add sub-tasks list
             this.subtaskArrayList = new ArrayList<>(task.getSubtasks());

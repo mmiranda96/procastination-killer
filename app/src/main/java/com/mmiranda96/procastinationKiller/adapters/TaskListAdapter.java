@@ -64,6 +64,7 @@ public class TaskListAdapter extends ArrayAdapter<Task> implements AdapterView.O
             public void onClick(View v) {
                 Intent intent = new Intent(activity.getApplicationContext(), InvitePeopleActivity.class);
                 intent.putExtra(IntentExtras.TASK, task);
+                intent.putExtra(IntentExtras.USER, user);
                 activity.startActivityForResult(intent, MainActivity.ADD_PEOPLE_ACTIVITY_CODE);
             }
         });
