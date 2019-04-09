@@ -1,5 +1,7 @@
 package com.mmiranda96.procastinationKiller.models;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Task implements Serializable {
+    private double latitude, longitude;
     private Integer id;
     private String title, description;
     private Date due;
@@ -23,13 +26,16 @@ public class Task implements Serializable {
         this.subtasks.addAll(subtasks);
     }
 
-    public Task(String title, String description, Date due, ArrayList<String> subtasks) {
+    // Only new tasks can have their location set
+    public Task(String title, String description, Date due, ArrayList<String> subtasks, LatLng location) {
         this.id = null;
         this.title = title;
         this.description = description;
         this.due = due;
         this.subtasks = new ArrayList<>();
         this.subtasks.addAll(subtasks);
+        this.latitude = location.latitude;
+        this.longitude= location.longitude;
     }
 
     public Task(JSONObject jsonTask){
@@ -45,7 +51,10 @@ public class Task implements Serializable {
                 subtasks.add(subtasksJSON.getString(i));
             }
             this.subtasks = subtasks;
-        } catch (JSONException e) {
+            JSONArray location = jsonTask.getJSONArray("coords");
+            this.latitude = location.getDouble(0);
+            this.longitude = location.getDouble(1);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -97,10 +106,19 @@ public class Task implements Serializable {
                 subtasks.put(subtask);
             }
             result.put("subtasks", subtasks);
+
+            JSONArray coords = new JSONArray();
+            coords.put(this.latitude);
+            coords.put(this.longitude);
+            result.put("coords", coords);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         return result;
+    }
+
+    public LatLng location() {
+        return new LatLng(this.latitude, this.longitude);
     }
 }
