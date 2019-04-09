@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.mmiranda96.procastinationKiller.R;
 import com.mmiranda96.procastinationKiller.models.Task;
+import com.mmiranda96.procastinationKiller.util.IntentExtras;
 
 import java.util.ArrayList;
 
@@ -23,6 +24,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     private Button goBack;
     private Button mapLocation;
     private ArrayAdapter<String> adapter;
+    private Task task;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +39,7 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         // TODO: add detail functionality here
         Intent intent = getIntent();
-        Task task = (Task) intent.getSerializableExtra("task");
+        this.task = (Task) intent.getSerializableExtra("task");
         if (task != null) {
             // add sub-tasks list
             this.subtaskArrayList = new ArrayList<>(task.getSubtasks());
@@ -62,6 +64,7 @@ public class TaskDetailActivity extends AppCompatActivity {
 
     public void changeToLocationMapActivity(View v) {
         Intent intent = new Intent(this, MapsActivity.class);
+        intent.putExtra(IntentExtras.TASK, this.task);
         startActivity(intent);
     }
 }

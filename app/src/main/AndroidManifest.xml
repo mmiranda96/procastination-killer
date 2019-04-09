@@ -3,6 +3,7 @@
     package="com.mmiranda96.procastinationKiller">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -11,6 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_map_key"/>
         <activity android:name=".activities.SignupActivity"></activity>
         <activity android:name=".activities.TaskDetailActivity" />
         <activity android:name=".activities.InvitePeopleActivity" />
@@ -23,7 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.MapActivity" />
+        <activity android:name=".activities.MapsActivity" />
     </application>
 
 </manifest>

@@ -1,14 +1,27 @@
 package com.mmiranda96.procastinationKiller.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 import com.mmiranda96.procastinationKiller.R;
 import com.mmiranda96.procastinationKiller.adapters.SubtaskListAdapter;
 import com.mmiranda96.procastinationKiller.models.Task;
@@ -23,8 +36,12 @@ import com.mmiranda96.procastinationKiller.util.Server;
 import java.util.ArrayList;
 import java.util.Date;
 
-// TODO: this is broken, implement logic with CreateTaskAsyncTask
-public class PutTaskActivity extends AppCompatActivity implements CreateTaskAsyncTask.Listener, UpdateTaskAsyncTask.Listener {
+public class PutTaskActivity extends AppCompatActivity implements
+        CreateTaskAsyncTask.Listener,
+        UpdateTaskAsyncTask.Listener,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
     private static final int RESULT_ERROR = 2;
 
     private EditText taskTitle, taskDescription, subtask;
@@ -33,8 +50,14 @@ public class PutTaskActivity extends AppCompatActivity implements CreateTaskAsyn
     private ArrayList<String> subtaskArrayList;
     private SubtaskListAdapter adapter;
     private TaskSource taskSource;
+
     private Task task;
     private boolean isNewTask;
+
+    private boolean useRealLocation;
+    private GoogleApiClient client;
+    private LocationRequest locationRequest;
+    private LatLng location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +72,10 @@ public class PutTaskActivity extends AppCompatActivity implements CreateTaskAsyn
         this.create = findViewById(R.id.buttonAddTaskActivityCreateTask);
 
         Intent intent = getIntent();
-
         User user = (User) intent.getSerializableExtra(IntentExtras.USER);
         this.taskSource = TaskSourceFactory.newSource(TaskSourceFactory.REMOTE, user, Server.URL);
-
         this.task = (Task) intent.getSerializableExtra(IntentExtras.TASK);
-        if (this.task != null) {
+        if (task != null) {
             this.isNewTask = false;
             this.taskTitle.setText(this.task.getTitle());
             this.taskDescription.setText(this.task.getDescription());
@@ -64,27 +85,36 @@ public class PutTaskActivity extends AppCompatActivity implements CreateTaskAsyn
             this.isNewTask = true;
             this.subtaskArrayList = new ArrayList<>();
             this.create.setText("Create");
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.i("location", "Permissions already granted, initing client...");
+                this.useRealLocation = true;
+                initClient();
+            } else {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+            }
         }
 
-        this.adapter = new SubtaskListAdapter(this, subtaskArrayList);
+        this.adapter = new SubtaskListAdapter(this, this.subtaskArrayList);
         this.subtaskList.setAdapter(adapter);
     }
 
     public void addSubtask(View view) {
         String subtask = this.subtask.getText().toString();
-        this.subtaskArrayList.add(subtask);
-        this.adapter.update(this.subtaskArrayList);
-        this.subtask.setText("");
+        if (subtask.compareTo("") != 0) {
+            this.subtaskArrayList.add(subtask);
+            this.adapter.update(this.subtaskArrayList);
+            this.subtask.setText("");
+        }
     }
 
     public void putTask(View view) {
         String title = this.taskTitle.getText().toString();
         String description = this.taskDescription.getText().toString();
         Date due = new Date(); // TODO: take user input
-        //ArrayList<String> subtasks =
 
         if (this.isNewTask) {
-            Task task = new Task(title, description, due, this.subtaskArrayList);
+            Task task = new Task(title, description, due, this.subtaskArrayList, this.location);
             CreateTaskAsyncTask asyncTask = taskSource.newCreateTaskAsyncTask(this);
             asyncTask.execute(task);
         } else {
@@ -116,4 +146,78 @@ public class PutTaskActivity extends AppCompatActivity implements CreateTaskAsyn
         }
         finish();
     }
+
+    private void initClient() {
+        this.client = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        this.client.connect();
+        this.locationRequest = LocationRequest.create();
+        this.locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        Log.i("location", "CLient connected...");
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED)
+            return;
+
+        LocationServices.FusedLocationApi.requestLocationUpdates(client, this.locationRequest, this);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.i("location", "Received new location: " + location.toString());
+        if (this.location == null) {
+            if (this.useRealLocation) {
+                Log.i("location", "Set up location: " + location.toString());
+                this.location = new LatLng(location.getLatitude(), location.getLongitude());
+            } else {
+                this.location = new  LatLng(0., 0.);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        this.useRealLocation = requestCode == 0 &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED;
+        if (this.useRealLocation) {
+            Log.i("location", "Permissions granted now, initing client...");
+            initClient();
+        } else {
+            Log.i("location", "Permissions denied, using empty coords...");
+            this.location = new LatLng(0., 0.);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (this.useRealLocation) {
+            client.connect();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (this.useRealLocation) {
+            client.disconnect();
+        }
+    }
+
 }
