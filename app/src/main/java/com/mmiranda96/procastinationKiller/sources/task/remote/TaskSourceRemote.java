@@ -1,6 +1,7 @@
 package com.mmiranda96.procastinationKiller.sources.task.remote;
 
 import com.mmiranda96.procastinationKiller.models.User;
+import com.mmiranda96.procastinationKiller.sources.task.AddUserToTaskAsyncTask;
 import com.mmiranda96.procastinationKiller.sources.task.CreateTaskAsyncTask;
 import com.mmiranda96.procastinationKiller.sources.task.GetTasksAsyncTask;
 import com.mmiranda96.procastinationKiller.sources.task.TaskSource;
@@ -29,5 +30,11 @@ public class TaskSourceRemote implements TaskSource {
     @Override
     public GetTasksAsyncTask newGetTasksAsyncTask(GetTasksAsyncTask.Listener listener) {
         return new GetTasksAsyncTaskRemote(this.server, this.user, listener);
+    }
+
+    @Override
+    public AddUserToTaskAsyncTask newAddUserToTaskAsyncTask(AddUserToTaskAsyncTask.Listener listener) {
+        return new AddUserToTaskAsyncTaskRemote(this.server, this.user, listener);
+
     }
 }
