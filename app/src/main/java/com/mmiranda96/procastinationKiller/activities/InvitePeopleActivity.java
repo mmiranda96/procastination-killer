@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +22,7 @@ import com.mmiranda96.procastinationKiller.util.Server;
 public class InvitePeopleActivity extends AppCompatActivity implements AddUserToTaskAsyncTask.Listener{
     private TextView textViewTaskTitle;
     private EditText editTextUserEmail;
+    private Button buttonGoBack, buttonInvite;
     private Integer taskId;
     private String userEmail;
     private Task task;
@@ -34,6 +36,8 @@ public class InvitePeopleActivity extends AppCompatActivity implements AddUserTo
 
         this.textViewTaskTitle = findViewById(R.id.textViewInvitePeopleActivityTaskTitle);
         this.editTextUserEmail = findViewById(R.id.editTextInvitePeopleActivityEmail);
+        this.buttonGoBack = findViewById(R.id.buttonInvitePeopleActivityBack);
+        this.buttonInvite = findViewById(R.id.buttonInvitePeopleActivityOK);
 
         Intent intent = getIntent();
         this.task = (Task) intent.getSerializableExtra(IntentExtras.TASK);
@@ -56,6 +60,9 @@ public class InvitePeopleActivity extends AppCompatActivity implements AddUserTo
         finish();
     }
 
+    public void goToMainActivity(View view){
+        finish();
+    }
 
     @Override
     public void addUserToTaskAsyncTaskDone(Integer result) {
