@@ -51,25 +51,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="55dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="Subtask"
         android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextAddTaskActivityDescription" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewAddTaskActivityDate" />
 
     <Button
         android:id="@+id/buttonAddTaskActivityAddSubtask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="55dp"
         android:onClick="addSubtask"
         android:text="Add"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/editTextAddTaskActivitySubtask"
-        app:layout_constraintTop_toBottomOf="@+id/editTextAddTaskActivityDescription" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewAddTaskActivityDate" />
 
     <Button
         android:id="@+id/buttonAddTaskActivityCreateTask"
@@ -83,5 +81,25 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextAddTaskActivitySubtask" />
+
+    <TextView
+        android:id="@+id/textViewAddTaskActivityDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="55dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextAddTaskActivityDescription" />
+
+    <Button
+        android:id="@+id/buttonAddTaskActivitySetDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="55dp"
+        android:onClick="setDue"
+        android:text="Set date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextAddTaskActivityDescription" />
 
 </android.support.constraint.ConstraintLayout>

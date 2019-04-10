@@ -43,7 +43,7 @@ public class Task implements Serializable {
             this.id = jsonTask.getInt("id");
             this.title = jsonTask.getString("title");
             this.description = jsonTask.optString("description");
-            long epoch = jsonTask.getLong("due");
+            long epoch = jsonTask.getLong("due") * 1000;
             this.due = new Date(epoch);
             ArrayList<String> subtasks = new ArrayList<>();
             JSONArray subtasksJSON = jsonTask.getJSONArray("subtasks");
@@ -99,7 +99,7 @@ public class Task implements Serializable {
             }
             result.put("title", this.title);
             result.put("description", this.description);
-            result.put("due", this.due.getTime());
+            result.put("due", this.due.getTime() / 1000);
 
             JSONArray subtasks = new JSONArray();
             for (String subtask : this.subtasks) {

@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -34,6 +35,7 @@ import com.mmiranda96.procastinationKiller.util.IntentExtras;
 import com.mmiranda96.procastinationKiller.util.Server;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 public class PutTaskActivity extends AppCompatActivity implements
@@ -43,7 +45,11 @@ public class PutTaskActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
     private static final int RESULT_ERROR = 2;
+    private static final int CALENDAR_ACTIVITY_CODE = 0;
 
+
+
+    private TextView dateView;
     private EditText taskTitle, taskDescription, subtask;
     private ListView subtaskList;
     private Button addSubtask, create;
@@ -52,6 +58,7 @@ public class PutTaskActivity extends AppCompatActivity implements
     private TaskSource taskSource;
 
     private Task task;
+    private Date due;
     private boolean isNewTask;
 
     private boolean useRealLocation;
@@ -64,6 +71,7 @@ public class PutTaskActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_put_task);
 
+        this.dateView = findViewById(R.id.textViewAddTaskActivityDate);
         this.taskTitle = findViewById(R.id.editTextAddTaskActivityTitle);
         this.taskDescription = findViewById(R.id.editTextAddTaskActivityDescription);
         this.subtask = findViewById(R.id.editTextAddTaskActivitySubtask);
@@ -77,6 +85,8 @@ public class PutTaskActivity extends AppCompatActivity implements
         this.task = (Task) intent.getSerializableExtra(IntentExtras.TASK);
         if (task != null) {
             this.isNewTask = false;
+            this.due = task.getDue();
+            this.dateView.setText(CalendarActivity.DATE_FORMAT.format(this.task.getDue()));
             this.taskTitle.setText(this.task.getTitle());
             this.taskDescription.setText(this.task.getDescription());
             this.subtaskArrayList = new ArrayList<>(task.getSubtasks());
@@ -99,6 +109,11 @@ public class PutTaskActivity extends AppCompatActivity implements
         this.subtaskList.setAdapter(adapter);
     }
 
+    public void setDue(View view) {
+        Intent intent = new Intent(this, CalendarActivity.class);
+        startActivityForResult(intent, CALENDAR_ACTIVITY_CODE);
+    }
+
     public void addSubtask(View view) {
         String subtask = this.subtask.getText().toString();
         if (subtask.compareTo("") != 0) {
@@ -111,14 +126,18 @@ public class PutTaskActivity extends AppCompatActivity implements
     public void putTask(View view) {
         String title = this.taskTitle.getText().toString();
         String description = this.taskDescription.getText().toString();
-        Date due = new Date(); // TODO: take user input
 
+        // Fixes strange bug in which dates are one day before
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(this.due.getTime());
+        calendar.add(Calendar.DAY_OF_YEAR,  1);
+        this.due = calendar.getTime();
         if (this.isNewTask) {
-            Task task = new Task(title, description, due, this.subtaskArrayList, this.location);
+            Task task = new Task(title, description, this.due, this.subtaskArrayList, this.location);
             CreateTaskAsyncTask asyncTask = taskSource.newCreateTaskAsyncTask(this);
             asyncTask.execute(task);
         } else {
-            Task task = new Task(this.task.getId(), title, description, due, this.subtaskArrayList);
+            Task task = new Task(this.task.getId(), title, description, this.due, this.subtaskArrayList);
             UpdateTaskAsyncTask asyncTask = taskSource.newUpdateTaskAsyncTask(this);
             asyncTask.execute(task);
         }
@@ -220,4 +239,16 @@ public class PutTaskActivity extends AppCompatActivity implements
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(requestCode == CALENDAR_ACTIVITY_CODE) {
+            if(resultCode == Activity.RESULT_OK){
+                long epoch = data.getLongExtra(IntentExtras.DATE, 0);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(epoch);
+                this.due = calendar.getTime();
+                this.dateView.setText(CalendarActivity.DATE_FORMAT.format(this.due));
+            }
+        }
+    }
 }
