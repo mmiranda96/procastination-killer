@@ -68,6 +68,7 @@ public class InvitePeopleActivity extends AppCompatActivity implements AddUserTo
                 return;
             default:
                 Toast.makeText(getApplicationContext(), "An error ocurred", Toast.LENGTH_SHORT).show();
+                return;
         }
     }
 }

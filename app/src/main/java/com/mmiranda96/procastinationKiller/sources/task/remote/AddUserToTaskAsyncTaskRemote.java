@@ -4,6 +4,9 @@ import com.mmiranda96.procastinationKiller.models.User;
 import com.mmiranda96.procastinationKiller.sources.task.AddUserToTaskAsyncTask;
 import com.mmiranda96.procastinationKiller.util.Server;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -27,6 +30,7 @@ public class AddUserToTaskAsyncTaskRemote extends AddUserToTaskAsyncTask {
         try{
             Integer taskId = Integer.valueOf(strings[0]);
             String emailUser = strings[1];
+            String jsonEmail = "{'email':'" + emailUser + "'}";
             URL url = new URL(this.server + "/tasks/"+ taskId.toString() +"/addUser");
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -37,7 +41,7 @@ public class AddUserToTaskAsyncTaskRemote extends AddUserToTaskAsyncTask {
 
             OutputStream os = conn.getOutputStream();
             //TODO check this
-            os.write(emailUser.getBytes());
+            os.write(new JSONObject(jsonEmail).toString().getBytes());
             os.close();
 
             int code = conn.getResponseCode();
@@ -53,6 +57,8 @@ public class AddUserToTaskAsyncTaskRemote extends AddUserToTaskAsyncTask {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return result;
