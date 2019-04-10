@@ -30,7 +30,7 @@ public class AddUserToTaskAsyncTaskRemote extends AddUserToTaskAsyncTask {
         try{
             Integer taskId = Integer.valueOf(strings[0]);
             String emailUser = strings[1];
-            String jsonEmail = "{'email':'" + emailUser + "'}";
+            //String jsonEmail = "{'email':'" + emailUser + "'}";
             URL url = new URL(this.server + "/tasks/"+ taskId.toString() +"/addUser");
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -40,8 +40,9 @@ public class AddUserToTaskAsyncTaskRemote extends AddUserToTaskAsyncTask {
             conn.setRequestMethod("POST");
 
             OutputStream os = conn.getOutputStream();
-            //TODO check this
-            os.write(new JSONObject(jsonEmail).toString().getBytes());
+            JSONObject jsonEmail = new JSONObject();
+            jsonEmail.put("email", emailUser);
+            os.write(jsonEmail.toString().getBytes());
             os.close();
 
             int code = conn.getResponseCode();

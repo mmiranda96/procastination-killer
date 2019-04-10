@@ -1,5 +1,6 @@
 package com.mmiranda96.procastinationKiller.activities;
 
+import android.app.Activity;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +19,8 @@ import com.mmiranda96.procastinationKiller.sources.task.TaskSource;
 import com.mmiranda96.procastinationKiller.sources.task.TaskSourceFactory;
 import com.mmiranda96.procastinationKiller.util.IntentExtras;
 import com.mmiranda96.procastinationKiller.util.Server;
+
+import static android.content.RestrictionsManager.RESULT_ERROR;
 
 public class InvitePeopleActivity extends AppCompatActivity implements AddUserToTaskAsyncTask.Listener{
     private TextView textViewTaskTitle;
@@ -56,8 +59,6 @@ public class InvitePeopleActivity extends AppCompatActivity implements AddUserTo
         this.userEmail = this.editTextUserEmail.getText().toString();
         AddUserToTaskAsyncTask asyncTask = taskSource.newAddUserToTaskAsyncTask(this);
         asyncTask.execute(this.taskId.toString(), this.userEmail);
-
-        finish();
     }
 
     public void goToMainActivity(View view){
@@ -66,16 +67,21 @@ public class InvitePeopleActivity extends AppCompatActivity implements AddUserTo
 
     @Override
     public void addUserToTaskAsyncTaskDone(Integer result) {
+        finishActivity(result);
+    }
+
+    private void finishActivity(Integer result) {
+        Intent intent = getIntent();
         switch (result) {
             case AddUserToTaskAsyncTask.SUCCESS:
                 Toast.makeText(getApplicationContext(), "A user has been added to your task", Toast.LENGTH_SHORT).show();
-                return;
-            case AddUserToTaskAsyncTask.ERROR:
-                Toast.makeText(getApplicationContext(), "Email is not valid", Toast.LENGTH_SHORT).show();
-                return;
+                setResult(Activity.RESULT_OK, intent);
+                break;
             default:
                 Toast.makeText(getApplicationContext(), "An error ocurred", Toast.LENGTH_SHORT).show();
-                return;
+                setResult(RESULT_ERROR);
+                break;
         }
+        finish();
     }
 }
