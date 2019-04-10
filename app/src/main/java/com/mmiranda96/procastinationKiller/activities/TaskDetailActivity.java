@@ -17,13 +17,6 @@ import java.util.ArrayList;
 
 public class TaskDetailActivity extends AppCompatActivity {
 
-    private TextView taskTitle;
-    private TextView taskDescription;
-    private ListView subtaskList;
-    private ArrayList<String> subtaskArrayList;
-    private Button goBack;
-    private Button mapLocation;
-    private ArrayAdapter<String> adapter;
     private Task task;
 
     @Override
@@ -31,30 +24,26 @@ public class TaskDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_detail);
 
-        this.taskTitle = findViewById(R.id.textViewTaskDetailActivityTitle);
-        this.taskDescription = findViewById(R.id.textViewTaskDetailActivityTaskDescription);
-        this.subtaskList = findViewById(R.id.listViewTaskDetailActivitySubtasks);
-        this.goBack = findViewById(R.id.buttonTaskDetailsActivityBack);
-        this.mapLocation = findViewById(R.id.buttonTaskDetailActivityMap);
+        TextView taskTitle = findViewById(R.id.textViewTaskDetailActivityTitle);
+        TextView taskDescription = findViewById(R.id.textViewTaskDetailActivityTaskDescription);
+        TextView taskDue = findViewById(R.id.textViewTaskDetailActivityDue);
+        ListView subtaskList = findViewById(R.id.listViewTaskDetailActivitySubtasks);
 
         // TODO: add detail functionality here
         Intent intent = getIntent();
         this.task = (Task) intent.getSerializableExtra("task");
         if (task != null) {
             // add sub-tasks list
-            this.subtaskArrayList = new ArrayList<>(task.getSubtasks());
-            this.adapter = new ArrayAdapter<>(
+            ArrayList<String> subtaskArrayList = new ArrayList<>(task.getSubtasks());
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(
                     getApplicationContext(),
                     android.R.layout.simple_list_item_1,
                     subtaskArrayList
             );
-            this.subtaskList.setAdapter(adapter);
-
-            // add title
-            this.taskTitle.setText(task.getTitle());
-
-            // add description
-            this.taskDescription.setText(task.getDescription());
+            subtaskList.setAdapter(adapter);
+            taskTitle.setText(task.getTitle());
+            taskDescription.setText(task.getDescription());
+            taskDue.setText("Due: " + CalendarActivity.DATE_FORMAT.format(task.getDue()));
         }
     }
 

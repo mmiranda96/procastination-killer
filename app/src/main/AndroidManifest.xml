@@ -28,6 +28,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.MapsActivity" />
+        <activity android:name=".activities.CalendarActivity" />
     </application>
 
 </manifest>
