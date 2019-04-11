@@ -31,7 +31,7 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         // TODO: add detail functionality here
         Intent intent = getIntent();
-        Task task = (Task) intent.getSerializableExtra(IntentExtras.TASK);
+        this.task = (Task) intent.getSerializableExtra(IntentExtras.TASK);
         if (task != null) {
             // add sub-tasks list
             ArrayList<String> subtaskArrayList = new ArrayList<>(task.getSubtasks());

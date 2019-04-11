@@ -179,7 +179,7 @@ public class PutTaskActivity extends AppCompatActivity implements
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        Log.i("location", "CLient connected...");
+        Log.i("location", "Client connected...");
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED)
             return;
@@ -205,6 +205,7 @@ public class PutTaskActivity extends AppCompatActivity implements
                 Log.i("location", "Set up location: " + location.toString());
                 this.location = new LatLng(location.getLatitude(), location.getLongitude());
             } else {
+                Log.i("location", "Set up default location: " + location.toString());
                 this.location = new  LatLng(0., 0.);
             }
         }
