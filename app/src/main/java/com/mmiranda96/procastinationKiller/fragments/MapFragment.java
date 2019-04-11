@@ -60,5 +60,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 .title("Task location");
         googleMap.addMarker(marker);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, ZOOM));
+        this.mapView.onResume();
     }
 }
