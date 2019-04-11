@@ -1,5 +1,6 @@
 package com.mmiranda96.procastinationKiller.sources.task.fake;
 
+import com.mmiranda96.procastinationKiller.sources.task.AddUserToTaskAsyncTask;
 import com.mmiranda96.procastinationKiller.sources.task.CreateTaskAsyncTask;
 import com.mmiranda96.procastinationKiller.sources.task.GetTasksAsyncTask;
 import com.mmiranda96.procastinationKiller.sources.task.TaskSource;
@@ -21,5 +22,10 @@ public class TaskSourceFake implements TaskSource {
     @Override
     public GetTasksAsyncTask newGetTasksAsyncTask(GetTasksAsyncTask.Listener listener) {
         return new GetTasksAsyncTaskFake(listener);
+    }
+
+    @Override
+    public AddUserToTaskAsyncTask newAddUserToTaskAsyncTask(AddUserToTaskAsyncTask.Listener listener) {
+        return new AddUserToTaskAsyncTaskFake(listener);
     }
 }
