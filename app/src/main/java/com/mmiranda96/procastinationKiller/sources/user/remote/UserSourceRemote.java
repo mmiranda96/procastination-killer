@@ -1,7 +1,9 @@
 package com.mmiranda96.procastinationKiller.sources.user.remote;
 
+import com.mmiranda96.procastinationKiller.models.User;
 import com.mmiranda96.procastinationKiller.sources.user.LoginAsyncTask;
 import com.mmiranda96.procastinationKiller.sources.user.SignupAsyncTask;
+import com.mmiranda96.procastinationKiller.sources.user.UpdateFirebaseTokenAsyncTask;
 import com.mmiranda96.procastinationKiller.sources.user.UserSource;
 
 public class UserSourceRemote implements UserSource {
@@ -20,5 +22,10 @@ public class UserSourceRemote implements UserSource {
     @Override
     public SignupAsyncTask newSignupAsyncTask(SignupAsyncTask.Listener listener) {
         return new SignupAsyncTaskRemote(this.server, listener);
+    }
+
+    @Override
+    public UpdateFirebaseTokenAsyncTask newUpdateFirebaseTokenAsyncTask(User user) {
+        return new UpdateFirebaseTokenAsyncTaskRemote(this.server, user);
     }
 }
