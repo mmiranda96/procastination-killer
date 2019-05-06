@@ -40,7 +40,10 @@ public class EditUserActivity extends AppCompatActivity implements UpdateUserAsy
     }
 
     public void onOkButtonClick(View view){
-        this.updatedUser = new User(this.emailEditText.getText().toString(), this.currentUser.getPassword()); //TODO user model has no name attribute
+        this.updatedUser = this.currentUser;
+        this.updatedUser.setName(this.nameEditText.getText().toString());
+
+        this.updatedUser = new User(this.emailEditText.getText().toString(), this.updatedUser.getPassword(), this.nameEditText.getText().toString());
         UpdateUserAsyncTask asyncTask = this.userSource.newUpdateUserAsyncTask(this, this.updatedUser);
         asyncTask.execute(this.currentUser);
     }
@@ -51,7 +54,7 @@ public class EditUserActivity extends AppCompatActivity implements UpdateUserAsy
     }
 
     private void finishActivity(Integer result) {
-        Intent intent = getIntent();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.putExtra(IntentExtras.USER, this.updatedUser);
         switch (result) {
             case UpdateUserAsyncTask.SUCCESS:
