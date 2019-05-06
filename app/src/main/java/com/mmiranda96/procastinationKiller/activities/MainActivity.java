@@ -30,7 +30,7 @@ import com.mmiranda96.procastinationKiller.util.Server;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask.Listener, GetMostUrgentTasksAsyncTask.Listener, OnCompleteListener<InstanceIdResult> {
-    public static final int PUT_TASK_ACTIVITY_CODE = 0, ADD_PEOPLE_ACTIVITY_CODE = 1;
+    public static final int PUT_TASK_ACTIVITY_CODE = 0, ADD_PEOPLE_ACTIVITY_CODE = 1, EDIT_USER_ACTIVITY_CODE = 2;
 
     private User currentUser;
     private String firebaseToken;
@@ -97,6 +97,18 @@ public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask
                     getTasks();
                     break;
             }
+        }else if(requestCode == EDIT_USER_ACTIVITY_CODE){
+            switch (resultCode) {
+                case Activity.RESULT_OK:
+                case Activity.RESULT_CANCELED:
+                    Intent intent = data;
+                    User userUpdated = (User) intent.getSerializableExtra(IntentExtras.USER);
+                    this.currentUser = userUpdated;
+                    break;
+                default:
+                    break;
+            }
+            getTasks();
         }
     }
 
@@ -142,6 +154,6 @@ public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask
     public void onEditProfileButtonClick(View view){
         Intent intent = new Intent(getApplicationContext(), EditUserActivity.class);
         intent.putExtra(IntentExtras.USER, this.currentUser);
-        startActivity(intent);
+        startActivityForResult(intent, EDIT_USER_ACTIVITY_CODE);
     }
 }
