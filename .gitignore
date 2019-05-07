@@ -68,3 +68,10 @@ fastlane/readme.md
 app/src/main/res/values/secrets.xml
 *.keystore
 
+# Android version
+build.gradle
+misc.xml
+encodings.xml
+Project.xml
+gradle-wrapper.properties
+
