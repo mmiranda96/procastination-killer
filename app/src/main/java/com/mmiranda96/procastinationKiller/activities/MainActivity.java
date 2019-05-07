@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask
     private TaskSource taskSource;
     private UserSource userSource;
     private Button editProfileButton;
+    private TextView helloText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +51,14 @@ public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask
         Intent intent = getIntent();
         this.currentUser = (User) intent.getSerializableExtra(IntentExtras.USER);
 
+        this.helloText = findViewById(R.id.textViewMainActivityHello);
+        this.helloText.setText("Hello " + this.currentUser.getUsername() + "!");
         this.taskList = findViewById(R.id.listViewMainActivityTaskList);
         this.editProfileButton = findViewById(R.id.buttonMainActivityEditProfile);
         ArrayList<Task> tasks = new ArrayList<>();
         this.adapter = new TaskListAdapter(this, this.currentUser, tasks);
         this.taskList.setAdapter(adapter);
         this.taskList.setOnItemClickListener(adapter);
-
 
         // TODO: use a dependency injection framework. Meanwhile, change REMOTE to FAKE if needed
         this.taskSource = TaskSourceFactory.newSource(
@@ -106,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask
                             this.currentUser,
                             Server.URL
                     );
+                    this.helloText.setText("Hello " + this.currentUser.getUsername() + "!");
                     this.getTasks();
                     break;
                 default:
