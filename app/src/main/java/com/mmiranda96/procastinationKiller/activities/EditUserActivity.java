@@ -42,10 +42,18 @@ public class EditUserActivity extends AppCompatActivity implements UpdateUserAsy
     }
 
     public void onOkButtonClick(View view){
+        if(this.nameEditText.getText().toString().compareTo("") == 0){
+            Toast.makeText(getApplicationContext(), "A name is required", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (this.emailEditText.getText().toString().compareTo("") == 0) {
+            Toast.makeText(getApplicationContext(), "An email is required", Toast.LENGTH_SHORT).show();
+            return;
+        }
         this.updatedUser = this.currentUser;
         this.updatedUser.setName(this.nameEditText.getText().toString());
-
         this.updatedUser = new User(this.emailEditText.getText().toString(), this.updatedUser.getPassword(), this.nameEditText.getText().toString());
+
         UpdateUserAsyncTask asyncTask = this.userSource.newUpdateUserAsyncTask(this, this.updatedUser);
         asyncTask.execute(this.currentUser);
     }

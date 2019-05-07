@@ -102,7 +102,6 @@ public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask
         }else if(requestCode == EDIT_USER_ACTIVITY_CODE){
             switch (resultCode) {
                 case Activity.RESULT_OK:
-                case Activity.RESULT_CANCELED:
                     this.currentUser = (User) data.getSerializableExtra(IntentExtras.USER);
                     this.taskSource = TaskSourceFactory.newSource(
                             TaskSourceFactory.REMOTE,
@@ -112,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask
                     this.helloText.setText("Hello " + this.currentUser.getUsername() + "!");
                     this.getTasks();
                     break;
+                case Activity.RESULT_CANCELED:
                 default:
                     break;
             }
