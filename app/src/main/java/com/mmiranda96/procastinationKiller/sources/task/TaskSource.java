@@ -7,5 +7,5 @@ public interface TaskSource {
     UpdateTaskAsyncTask newUpdateTaskAsyncTask(UpdateTaskAsyncTask.Listener listener);
     GetTasksAsyncTask newGetTasksAsyncTask(GetTasksAsyncTask.Listener listener);
     AddUserToTaskAsyncTask newAddUserToTaskAsyncTask(AddUserToTaskAsyncTask.Listener listener);
-    GetMostUrgentTasksAsyncTask newAddUserToTaskAsyncTask(GetMostUrgentTasksAsyncTask.Listener listener);
+    GetMostUrgentTasksAsyncTask newGetMostUrgentTasksAsyncTask(GetMostUrgentTasksAsyncTask.Listener listener);
 }

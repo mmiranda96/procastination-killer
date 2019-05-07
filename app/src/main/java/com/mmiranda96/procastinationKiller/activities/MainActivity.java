@@ -72,7 +72,8 @@ public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask
         FirebaseInstanceId.getInstance().getInstanceId()
                 .addOnCompleteListener(this);
 
-        Toast.makeText(getApplicationContext(), "Hello " + currentUser.getUsername(), Toast.LENGTH_SHORT).show();
+        GetMostUrgentTasksAsyncTask getMostUrgentTasksAsyncTask = this.taskSource.newGetMostUrgentTasksAsyncTask(this);
+        getMostUrgentTasksAsyncTask.execute();
     }
 
     public void addActivity(View view){
@@ -128,11 +129,11 @@ public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask
 
     @Override
     public void getMostUrgentTasksAsyncTaskDone(ArrayList<Task> result) {
-        //toast
-        String tasks ="";
-        for (Task task : result) {
-            tasks = tasks + task.getTitle();
+        ArrayList<String> titles = new ArrayList<>();
+        for (Task t : result) {
+            titles.add(t.getTitle());
         }
+        String tasks = String.join(" - ", titles);
         Toast.makeText(getApplicationContext(), "Most Urgent task: " + tasks, Toast.LENGTH_SHORT).show();
     }
 }

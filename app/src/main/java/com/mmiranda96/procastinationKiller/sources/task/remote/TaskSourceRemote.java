@@ -40,7 +40,7 @@ public class TaskSourceRemote implements TaskSource {
     }
 
     @Override
-    public GetMostUrgentTasksAsyncTask newAddUserToTaskAsyncTask(GetMostUrgentTasksAsyncTask.Listener listener) {
+    public GetMostUrgentTasksAsyncTask newGetMostUrgentTasksAsyncTask(GetMostUrgentTasksAsyncTask.Listener listener) {
         return new GetMostUrgentTasksAsyncTaskRemote(this.server, this.user, listener);
     }
 }
