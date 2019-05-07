@@ -16,6 +16,7 @@ import com.mmiranda96.procastinationKiller.R;
 import com.mmiranda96.procastinationKiller.adapters.TaskListAdapter;
 import com.mmiranda96.procastinationKiller.models.Task;
 import com.mmiranda96.procastinationKiller.models.User;
+import com.mmiranda96.procastinationKiller.sources.task.GetMostUrgentTasksAsyncTask;
 import com.mmiranda96.procastinationKiller.sources.task.GetTasksAsyncTask;
 import com.mmiranda96.procastinationKiller.sources.task.TaskSource;
 import com.mmiranda96.procastinationKiller.sources.task.TaskSourceFactory;
@@ -27,7 +28,7 @@ import com.mmiranda96.procastinationKiller.util.Server;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask.Listener, OnCompleteListener<InstanceIdResult> {
+public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask.Listener, GetMostUrgentTasksAsyncTask.Listener, OnCompleteListener<InstanceIdResult> {
     public static final int PUT_TASK_ACTIVITY_CODE = 0, ADD_PEOPLE_ACTIVITY_CODE = 1;
 
     private User currentUser;
@@ -106,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask
         this.adapter.update(result);
     }
 
+
     public void onComplete(com.google.android.gms.tasks.Task<InstanceIdResult> task) {
         if (!task.isSuccessful()) {
             Log.e("Firebase", "getInstanceId failed", task.getException());
@@ -117,9 +119,20 @@ public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask
         onNewToken(token);
     }
 
+
     public void onNewToken(String token) {
         Log.d("Firebase", "Token: " + token);
         UpdateFirebaseTokenAsyncTask asyncTask = this.userSource.newUpdateFirebaseTokenAsyncTask(this.currentUser);
         asyncTask.execute(token);
+    }
+
+    @Override
+    public void getMostUrgentTasksAsyncTaskDone(ArrayList<Task> result) {
+        //toast
+        String tasks ="";
+        for (Task task : result) {
+            tasks = tasks + task.getTitle();
+        }
+        Toast.makeText(getApplicationContext(), "Most Urgent task: " + tasks, Toast.LENGTH_SHORT).show();
     }
 }

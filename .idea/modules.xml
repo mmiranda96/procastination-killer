@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/procastination-killer.iml" filepath="$PROJECT_DIR$/procastination-killer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/procastination-killer-master.iml" filepath="$PROJECT_DIR$/procastination-killer-master.iml" />
     </modules>
   </component>
 </project>
