@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask
 
         this.taskList = findViewById(R.id.listViewMainActivityTaskList);
         this.editProfileButton = findViewById(R.id.buttonMainActivityEditProfile);
-
         ArrayList<Task> tasks = new ArrayList<>();
         this.adapter = new TaskListAdapter(this, this.currentUser, tasks);
         this.taskList.setAdapter(adapter);
@@ -101,14 +100,17 @@ public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask
             switch (resultCode) {
                 case Activity.RESULT_OK:
                 case Activity.RESULT_CANCELED:
-                    Intent intent = data;
-                    User userUpdated = (User) intent.getSerializableExtra(IntentExtras.USER);
-                    this.currentUser = userUpdated;
+                    this.currentUser = (User) data.getSerializableExtra(IntentExtras.USER);
+                    this.taskSource = TaskSourceFactory.newSource(
+                            TaskSourceFactory.REMOTE,
+                            this.currentUser,
+                            Server.URL
+                    );
+                    this.getTasks();
                     break;
                 default:
                     break;
             }
-            getTasks();
         }
     }
 
@@ -119,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask
 
     @Override
     public void getTasksAsyncTaskDone(ArrayList<Task> result) {
-        this.adapter.update(result);
+        this.adapter.update(result, this.currentUser);
     }
 
 
