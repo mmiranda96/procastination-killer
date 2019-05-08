@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask
     private TaskListAdapter adapter;
     private TaskSource taskSource;
     private UserSource userSource;
-    private Button editProfileButton;
     private TextView helloText;
 
     @Override
@@ -54,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask
         this.helloText = findViewById(R.id.textViewMainActivityHello);
         this.helloText.setText("Hello " + this.currentUser.getUsername() + "!");
         this.taskList = findViewById(R.id.listViewMainActivityTaskList);
-        this.editProfileButton = findViewById(R.id.buttonMainActivityEditProfile);
         ArrayList<Task> tasks = new ArrayList<>();
         this.adapter = new TaskListAdapter(this, this.currentUser, tasks);
         this.taskList.setAdapter(adapter);

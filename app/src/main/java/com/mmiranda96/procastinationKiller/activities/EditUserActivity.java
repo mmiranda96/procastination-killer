@@ -50,10 +50,7 @@ public class EditUserActivity extends AppCompatActivity implements UpdateUserAsy
             Toast.makeText(getApplicationContext(), "An email is required", Toast.LENGTH_SHORT).show();
             return;
         }
-        this.updatedUser = this.currentUser;
-        this.updatedUser.setName(this.nameEditText.getText().toString());
-        this.updatedUser = new User(this.emailEditText.getText().toString(), this.updatedUser.getPassword(), this.nameEditText.getText().toString());
-
+        this.updatedUser = new User(this.emailEditText.getText().toString(), this.currentUser.getPassword(), this.nameEditText.getText().toString());
         UpdateUserAsyncTask asyncTask = this.userSource.newUpdateUserAsyncTask(this, this.updatedUser);
         asyncTask.execute(this.currentUser);
     }
