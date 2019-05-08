@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,7 +31,7 @@ import com.mmiranda96.procastinationKiller.util.Server;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask.Listener, GetMostUrgentTasksAsyncTask.Listener, OnCompleteListener<InstanceIdResult> {
-    public static final int PUT_TASK_ACTIVITY_CODE = 0, ADD_PEOPLE_ACTIVITY_CODE = 1;
+    public static final int PUT_TASK_ACTIVITY_CODE = 0, ADD_PEOPLE_ACTIVITY_CODE = 1, EDIT_USER_ACTIVITY_CODE = 2;
 
     private User currentUser;
     private String firebaseToken;
@@ -38,23 +40,23 @@ public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask
     private TaskListAdapter adapter;
     private TaskSource taskSource;
     private UserSource userSource;
+    private TextView helloText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         Intent intent = getIntent();
         this.currentUser = (User) intent.getSerializableExtra(IntentExtras.USER);
 
+        this.helloText = findViewById(R.id.textViewMainActivityHello);
+        this.helloText.setText("Hello " + this.currentUser.getUsername() + "!");
         this.taskList = findViewById(R.id.listViewMainActivityTaskList);
-
         ArrayList<Task> tasks = new ArrayList<>();
         this.adapter = new TaskListAdapter(this, this.currentUser, tasks);
         this.taskList.setAdapter(adapter);
         this.taskList.setOnItemClickListener(adapter);
-
 
         // TODO: use a dependency injection framework. Meanwhile, change REMOTE to FAKE if needed
         this.taskSource = TaskSourceFactory.newSource(
@@ -95,6 +97,22 @@ public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask
                     getTasks();
                     break;
             }
+        }else if(requestCode == EDIT_USER_ACTIVITY_CODE){
+            switch (resultCode) {
+                case Activity.RESULT_OK:
+                    this.currentUser = (User) data.getSerializableExtra(IntentExtras.USER);
+                    this.taskSource = TaskSourceFactory.newSource(
+                            TaskSourceFactory.REMOTE,
+                            this.currentUser,
+                            Server.URL
+                    );
+                    this.helloText.setText("Hello " + this.currentUser.getUsername() + "!");
+                    this.getTasks();
+                    break;
+                case Activity.RESULT_CANCELED:
+                default:
+                    break;
+            }
         }
     }
 
@@ -105,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask
 
     @Override
     public void getTasksAsyncTaskDone(ArrayList<Task> result) {
-        this.adapter.update(result);
+        this.adapter.update(result, this.currentUser);
     }
 
 
@@ -135,5 +153,11 @@ public class MainActivity extends AppCompatActivity implements GetTasksAsyncTask
         }
         String tasks = String.join(" - ", titles);
         Toast.makeText(getApplicationContext(), "Most Urgent task: " + tasks, Toast.LENGTH_SHORT).show();
+    }
+
+    public void onEditProfileButtonClick(View view){
+        Intent intent = new Intent(getApplicationContext(), EditUserActivity.class);
+        intent.putExtra(IntentExtras.USER, this.currentUser);
+        startActivityForResult(intent, EDIT_USER_ACTIVITY_CODE);
     }
 }

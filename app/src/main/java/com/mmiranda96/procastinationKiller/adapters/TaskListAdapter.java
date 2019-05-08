@@ -38,6 +38,12 @@ public class TaskListAdapter extends ArrayAdapter<Task> implements AdapterView.O
         this.notifyDataSetChanged();
     }
 
+    public void update(ArrayList<Task> tasks, User user) {
+        this.user = user;
+        this.tasks = new ArrayList<>(tasks);
+        this.notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         return this.tasks.size();

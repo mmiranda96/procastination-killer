@@ -17,7 +17,7 @@ import com.mmiranda96.procastinationKiller.util.Server;
 
 public class SignupActivity extends AppCompatActivity implements SignupAsyncTask.Listener {
 
-    private EditText email, password, confirmPassword;
+    private EditText email, password, confirmPassword, name;
     private UserSource userSource;
 
     @Override
@@ -28,6 +28,7 @@ public class SignupActivity extends AppCompatActivity implements SignupAsyncTask
         this.email = findViewById(R.id.editTextSignupActivityEmail);
         this.password = findViewById(R.id.editTextSignupActivityPassword);
         this.confirmPassword = findViewById(R.id.editTextSignupActivityConfirmPassword);
+        this.name = findViewById(R.id.editTextSignupActivityName);
         this.userSource = UserSourceFactory.newSource(UserSourceFactory.REMOTE, Server.URL);
     }
 
@@ -44,10 +45,15 @@ public class SignupActivity extends AppCompatActivity implements SignupAsyncTask
             Toast.makeText(getApplicationContext(), "Passwords must match", Toast.LENGTH_SHORT).show();
             return;
         }
+        if (this.name.getText().toString().compareTo("") == 0) {
+            Toast.makeText(getApplicationContext(), "A name is required", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         String email = this.email.getText().toString();
         String password = this.password.getText().toString();
-        User user = new User(email, password);
+        String name = this.name.getText().toString();
+        User user = new User(email, password, name);
 
         SignupAsyncTask asyncTask = this.userSource.newSignupAsyncTask(this);
         asyncTask.execute(user);
@@ -60,8 +66,9 @@ public class SignupActivity extends AppCompatActivity implements SignupAsyncTask
             case SignupAsyncTask.SUCCESS:
                 String email = this.email.getText().toString();
                 String password = this.password.getText().toString();
+                String name = this.name.getText().toString();
 
-                User user = new User(email, password);
+                User user = new User(email, password, name);
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.putExtra(IntentExtras.USER, user);
                 startActivity(intent);
