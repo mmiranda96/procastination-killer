@@ -32,6 +32,17 @@
         </activity>
         <activity android:name=".activities.MapsActivity" />
         <activity android:name=".activities.CalendarActivity" />
+        <activity android:name=".activities.RequestResetPasswordActivity" />
+        <activity android:name=".activities.ResetPasswordActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with " https://procastination-killer.com/” -->
+                <data android:scheme="https"
+                    android:host="procastination-killer.com" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
