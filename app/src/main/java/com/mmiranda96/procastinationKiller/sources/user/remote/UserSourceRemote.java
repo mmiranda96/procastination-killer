@@ -2,6 +2,8 @@ package com.mmiranda96.procastinationKiller.sources.user.remote;
 
 import com.mmiranda96.procastinationKiller.models.User;
 import com.mmiranda96.procastinationKiller.sources.user.LoginAsyncTask;
+import com.mmiranda96.procastinationKiller.sources.user.RequestResetPasswordAsyncTask;
+import com.mmiranda96.procastinationKiller.sources.user.ResetPasswordAsyncTask;
 import com.mmiranda96.procastinationKiller.sources.user.SignupAsyncTask;
 import com.mmiranda96.procastinationKiller.sources.user.UpdateFirebaseTokenAsyncTask;
 import com.mmiranda96.procastinationKiller.sources.user.UpdateUserAsyncTask;
@@ -33,5 +35,14 @@ public class UserSourceRemote implements UserSource {
     @Override
     public UpdateUserAsyncTask newUpdateUserAsyncTask(UpdateUserAsyncTask.Listener listener, User user) {
         return new UpdateUserAsyncTaskRemote(this.server, user, listener);
+    }
+
+    public RequestResetPasswordAsyncTask newRequestResetPasswordAsyncTask(RequestResetPasswordAsyncTask.Listener listener) {
+        return new RequestResetPasswordAsyncTaskRemote(this.server, listener);
+    }
+
+    @Override
+    public ResetPasswordAsyncTask newResetPasswordAsyncTask(ResetPasswordAsyncTask.Listener listener, String token) {
+        return new ResetPasswordAsyncTaskRemote(this.server, listener);
     }
 }
