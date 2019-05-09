@@ -35,9 +35,9 @@ public class EditUserActivity extends AppCompatActivity implements UpdateUserAsy
         this.currentUser = (User) intent.getSerializableExtra(IntentExtras.USER);
 
         this.nameEditText = findViewById(R.id.editTextEditUserActivityName);
-        this.nameEditText.setHint(this.currentUser.getName());
+        this.nameEditText.setText(this.currentUser.getName());
         this.emailEditText = findViewById(R.id.editTextEditUserActivityEmail);
-        this.emailEditText.setHint(this.currentUser.getUsername());
+        this.emailEditText.setText(this.currentUser.getUsername());
         this.userSource = UserSourceFactory.newSource(UserSourceFactory.REMOTE, Server.URL);
     }
 
