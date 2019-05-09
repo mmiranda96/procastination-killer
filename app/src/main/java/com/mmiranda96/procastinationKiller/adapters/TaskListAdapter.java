@@ -60,6 +60,7 @@ public class TaskListAdapter extends ArrayAdapter<Task> implements AdapterView.O
         TextView description = view.findViewById(R.id.textViewTaskListAdapterDescription);
         Button addPeople = view.findViewById(R.id.buttonTaskListAdapterAddPeople);
         Button edit = view.findViewById(R.id.buttonTaskListAdapterEdit);
+        Button shareTask = view.findViewById(R.id.buttonTaskListAdapterShareTask);
 
         final Task task = this.tasks.get(position);
 
@@ -81,6 +82,16 @@ public class TaskListAdapter extends ArrayAdapter<Task> implements AdapterView.O
                 intent.putExtra(IntentExtras.USER, user);
                 intent.putExtra(IntentExtras.TASK, task);
                 activity.startActivityForResult(intent, MainActivity.PUT_TASK_ACTIVITY_CODE);
+            }
+        });
+
+        shareTask.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT, task.getTitle() + ": " + task.getDescription() + " - due " + task.getDue());
+                activity.startActivity(intent.createChooser(intent, "Share"));
             }
         });
 
